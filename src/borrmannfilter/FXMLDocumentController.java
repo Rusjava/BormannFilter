@@ -12,15 +12,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 /**
  *
- * @author Samsung
+ * @author Ruslan Feshchenko
+ * @version 0.1
  */
 public class FXMLDocumentController implements Initializable {
     
     @FXML
-    private Label label;
+    private Text label;
     @FXML
     private Button button;
     
