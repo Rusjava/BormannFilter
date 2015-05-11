@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.*?>
 
 <GridPane fx:controller="borrmannfilter.FXMLDocumentController" 
     xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
@@ -33,7 +34,10 @@
         <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <Button fx:id="button" text="Calculate" onAction="#handleButtonAction"/>
         </HBox>
-        <Text fx:id="output" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <Text styleClass="out" fx:id="output" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
  
     </children>
+    <stylesheets>
+        <URL value="@CascadeStyleSheetBorrmann.css" />
+    </stylesheets>
 </GridPane>
