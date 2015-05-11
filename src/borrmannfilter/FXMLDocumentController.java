@@ -40,57 +40,60 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField;
     @FXML
     private Button button;
-
     /*
-    * Real part of the scaterring amplitude inputs
-    */
-    
+     * Real part of the scaterring amplitude inputs
+     */
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        output.setText("Calculating! " + "f1=" + f1);
+        output.setText("Calculating! " + "\nf1=" + f1 +
+                "\nf2=" + f2 + "\nd=" + d + "\nden=" + den);
     }
 
     @FXML
     private void handlef1FieldAction(ActionEvent event) {
         f1 = Float.parseFloat(f1Field.getText());
     }
-  
+
     @FXML
     private void handlef1FieldMouseExited(MouseEvent event) {
         f1 = Float.parseFloat(f1Field.getText());
     }
     /*
-    * Imagenery part of the scaterring amplitude inputs
-    */
+     * Imagenery part of the scaterring amplitude inputs
+     */
+
     @FXML
     private void handlef2FieldAction(ActionEvent event) {
         f2 = Float.parseFloat(f2Field.getText());
     }
-    
+
     @FXML
     private void handlef2FieldMouseExited(MouseEvent event) {
         f2 = Float.parseFloat(f2Field.getText());
-    } 
+    }
     /*
-    * Interplane distance inputs
-    */
+     * Interplane distance inputs
+     */
+
     @FXML
     private void handleDFieldAction(ActionEvent event) {
         d = Float.parseFloat(dField.getText());
     }
-    
+
     @FXML
     private void handleDFieldMouseExited(MouseEvent event) {
         d = Float.parseFloat(dField.getText());
     }
     /*
-    * Density inputs
-    */
+     * Density inputs
+     */
+
     @FXML
     private void handleDenFieldAction(ActionEvent event) {
         den = Float.parseFloat(denField.getText());
     }
-    
+
     @FXML
     private void handleDenFieldMouseExited(MouseEvent event) {
         den = Float.parseFloat(denField.getText());
