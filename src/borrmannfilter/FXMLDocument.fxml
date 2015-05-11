@@ -15,18 +15,25 @@
     </padding>
     <children>
         <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <TextField fx:id="f1Field" GridPane.columnIndex="1" GridPane.rowIndex="0"
+             onAction="#handlef1FieldAction" onMouseExited="#handlef1FieldMouseExited" text="0.00001"/>
+        
         <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <TextField fx:id="f2Field" GridPane.columnIndex="1" GridPane.rowIndex="1"
+             onAction="#handlef2FieldAction" onMouseExited="#handlef2FieldMouseExited" text="0.000001"/>
+        
         <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <TextField fx:id="dField" GridPane.columnIndex="1" GridPane.rowIndex="2"
+             onAction="#handleDFieldAction" onMouseExited="#handleDFieldMouseExited" text="0.1"/>
+        
         <Label text="Density, cm-3 " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <TextField fx:id="denField"  GridPane.columnIndex="1" GridPane.rowIndex="3"
+             onAction="#handleDenFieldAction" onMouseExited="#handleDenFieldMouseExited" text="1"/>
         
         <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
-            <Button fx:id="button" text="Sign In" onAction="#handleButtonAction"/>
+            <Button fx:id="button" text="Calculate" onAction="#handleButtonAction"/>
         </HBox>
-        <Text fx:id="label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <Text fx:id="output" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
  
     </children>
 </GridPane>
