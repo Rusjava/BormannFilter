@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 
 <GridPane fx:controller="borrmannfilter.FXMLDocumentController" 
     xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
@@ -13,7 +14,19 @@
         <Insets top="25" right="25" bottom="10" left="25"/>
     </padding>
     <children>
-        <Button fx:id="button" layoutX="176.0" layoutY="149.0" onAction="#handleButtonAction" text="Calculate" />
-        <Label fx:id="label" layoutX="59.0" layoutY="31.0" text="My text" />
+        <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Density, cm-3 " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        
+        <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button fx:id="button" text="Sign In" onAction="#handleButtonAction"/>
+        </HBox>
+        <Text fx:id="label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+ 
     </children>
 </GridPane>
