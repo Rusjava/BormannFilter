@@ -46,8 +46,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        output.setText("Calculating! " + "\nf1=" + f1 +
-                "\nf2=" + f2 + "\nd=" + d + "\nden=" + den);
+        output.setText("Calculating! " + "\nf1=" + f1
+                + "\nf2=" + f2 + "\nd=" + d + "\nden=" + den);
     }
 
     @FXML
