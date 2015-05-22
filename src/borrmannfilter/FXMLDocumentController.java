@@ -40,9 +40,6 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField;
     @FXML
     private Button button;
-    /*
-     * Real part of the scaterring amplitude inputs
-     */
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -50,58 +47,46 @@ public class FXMLDocumentController implements Initializable {
                 + "\nf2=" + f2 + "\nd=" + d + "\nden=" + den);
     }
 
+    /*
+     * Real part of the scaterring amplitude inputs
+     */
     @FXML
     private void handlef1FieldAction(ActionEvent event) {
         f1 = Float.parseFloat(f1Field.getText());
     }
 
-    @FXML
-    private void handlef1FieldMouseExited(MouseEvent event) {
-        f1 = Float.parseFloat(f1Field.getText());
-    }
     /*
      * Imagenery part of the scaterring amplitude inputs
      */
-
     @FXML
     private void handlef2FieldAction(ActionEvent event) {
         f2 = Float.parseFloat(f2Field.getText());
     }
 
-    @FXML
-    private void handlef2FieldMouseExited(MouseEvent event) {
-        f2 = Float.parseFloat(f2Field.getText());
-    }
     /*
      * Interplane distance inputs
      */
-
     @FXML
     private void handleDFieldAction(ActionEvent event) {
         d = Float.parseFloat(dField.getText());
     }
 
-    @FXML
-    private void handleDFieldMouseExited(MouseEvent event) {
-        d = Float.parseFloat(dField.getText());
-    }
     /*
      * Density inputs
      */
-
     @FXML
     private void handleDenFieldAction(ActionEvent event) {
-        den = Float.parseFloat(denField.getText());
-    }
-
-    @FXML
-    private void handleDenFieldMouseExited(MouseEvent event) {
         den = Float.parseFloat(denField.getText());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        f1Field.textProperty().addListener(event -> f1 = Float.parseFloat(f1Field.getText()));
+        f2Field.textProperty().addListener(event -> f2 = Float.parseFloat(f2Field.getText()));
+        dField.textProperty().addListener(event -> d = Float.parseFloat(dField.getText()));
+        denField.textProperty().addListener(event -> {/*den = Float.parseFloat(denField.getText());*/
+        System.out.println(Float.parseFloat(denField.getText()));});
     }
 
     private double f1, f2, den, d;
