@@ -20,6 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 .out {
-    -fx-text-inner-color: red;
+    -fx-text-fill: #260879cc;
     -fx-font-weight: bold;
 }

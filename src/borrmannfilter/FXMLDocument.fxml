@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -9,35 +10,53 @@
 <?import javafx.scene.text.*?>
 <?import java.net.*?>
 
-<GridPane fx:controller="borrmannfilter.FXMLDocumentController" 
-    xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-    <padding>
-        <Insets top="25" right="25" bottom="10" left="25"/>
-    </padding>
-    <children>
-        <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="f1Field" GridPane.columnIndex="1" GridPane.rowIndex="0"
-             onAction="#handlef1FieldAction" text="0.00001"/>
-        
-        <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="f2Field" GridPane.columnIndex="1" GridPane.rowIndex="1"
-             onAction="#handlef2FieldAction" text="0.000001"/>
-        
-        <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="dField" GridPane.columnIndex="1" GridPane.rowIndex="2"
-             onAction="#handleDFieldAction" text="0.1"/>
-        
-        <Label text="Density, cm-3 " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextField fx:id="denField"  GridPane.columnIndex="1" GridPane.rowIndex="3"
-             onAction="#handleDenFieldAction" text="1"/>
-        
-        <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
-            <Button fx:id="button" text="Calculate" onAction="#handleButtonAction"/>
-        </HBox>
-        <Text styleClass="out" fx:id="output" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
- 
-    </children>
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="342.0">
+         <children>
+            <GridPane hgap="10" layoutX="50.0" layoutY="50.0" prefHeight="213.0" prefWidth="271.0" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="f1Field" onAction="#handlef1FieldAction" text="0.00001" GridPane.columnIndex="1" />
+                  <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="f2Field" onAction="#handlef2FieldAction" text="0.000001" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="dField" onAction="#handleDFieldAction" text="0.1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="Density, cm-3 " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <TextField fx:id="denField" onAction="#handleDenFieldAction" text="1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
+                     </children>
+                  </HBox>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <padding>
+                  <Insets bottom="10" left="25" right="25" top="25" />
+               </padding>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+               <top>
+                  <Label fx:id="output" minWidth="100.0" styleClass="out" text="Calculating:" BorderPane.alignment="CENTER" />
+               </top>
+            </BorderPane>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding></AnchorPane>
+    </content>
     <stylesheets>
         <URL value="@CascadeStyleSheetBorrmann.css" />
     </stylesheets>
-</GridPane>
+</ScrollPane>

@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -35,7 +36,7 @@ import javafx.scene.text.Text;
 public class FXMLDocumentController implements Initializable {
 
     @FXML
-    private Text output;
+    private Label output;
     @FXML
     private TextField f1Field, f2Field, dField, denField;
     @FXML
@@ -43,8 +44,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        output.setText("Calculating! " + "\nf1=" + f1
-                + "\nf2=" + f2 + "\nd=" + d + "\nden=" + den);
+        output.setText("Calculating!" + " f1=" + f1
+                + " f2=" + f2 + " d=" + d + " den=" + den);
     }
 
     /*
@@ -82,12 +83,11 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        f1Field.textProperty().addListener(event -> f1 = Float.parseFloat(f1Field.getText()));
-        f2Field.textProperty().addListener(event -> f2 = Float.parseFloat(f2Field.getText()));
-        dField.textProperty().addListener(event -> d = Float.parseFloat(dField.getText()));
-        denField.textProperty().addListener(event -> {/*den = Float.parseFloat(denField.getText());*/
-        System.out.println(Float.parseFloat(denField.getText()));});
+        f1Field.textProperty().addListener(event -> f1 = (f1Field.getText().length() == 0) ? 0 : Float.parseFloat(f1Field.getText()));
+        f2Field.textProperty().addListener(event -> f2 = (f2Field.getText().length() == 0) ? 0 : Float.parseFloat(f2Field.getText()));
+        dField.textProperty().addListener(event -> d = (dField.getText().length() == 0) ? 0 : Float.parseFloat(dField.getText()));
+        denField.textProperty().addListener(event -> den = (denField.getText().length() == 0) ? 0 : Float.parseFloat(denField.getText()));
     }
 
-    private double f1, f2, den, d;
+    private double f1 = 0.00001, f2 = 0.000001, den = 1, d = 0.1;
 }
