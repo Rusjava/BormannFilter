@@ -19,12 +19,10 @@ package borrmannfilter;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -44,7 +42,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        output.setText("Calculating!" + " f1=" + f1
+        output.setText("Parameters:" + " f1=" + f1
                 + " f2=" + f2 + " d=" + d + " den=" + den);
     }
 
