@@ -14,7 +14,7 @@
   <content>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="342.0">
          <children>
-            <GridPane hgap="10" layoutX="50.0" layoutY="50.0" prefHeight="213.0" prefWidth="271.0" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <GridPane hgap="10" layoutX="50.0" layoutY="50.0" prefHeight="213.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
                   <TextField fx:id="f1Field" onAction="#handlef1FieldAction" text="0.00001" GridPane.columnIndex="1" />
@@ -46,7 +46,7 @@
                   <RowConstraints />
                </rowConstraints>
             </GridPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+            <BorderPane prefHeight="200.0" styleClass="rPane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="220.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="out" text="Calculating:" BorderPane.alignment="CENTER" />
                </top>
