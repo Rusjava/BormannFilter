@@ -10,9 +10,9 @@
 <?import javafx.scene.text.*?>
 <?import java.net.*?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="360.0">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="380.0">
          <children>
             <GridPane hgap="10" layoutX="50.0" layoutY="50.0" prefHeight="213.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
