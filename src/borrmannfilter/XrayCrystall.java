@@ -25,8 +25,8 @@ import org.apache.commons.math3.complex.*;
  */
 public class XrayCrystall {
 
-    private double d, den, theta;
-    private Complex f;
+    private double d, den, theta, L, q;
+    private Complex f, B = null, eps0 = null;
 
     public XrayCrystall() {
         this.f = new Complex(0, 0);
@@ -69,7 +69,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning inter-plane distance of the scattering factor
+     * Returning inter-plane distance of the crystal
      *
      * @return
      */
@@ -78,7 +78,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Setting inter-plane distance of the scattering factor
+     * Setting inter-plane distance of the crystal
      *
      * @param d
      */
@@ -87,7 +87,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning density of the scattering factor
+     * Returning density of the crystal
      *
      * @return
      */
@@ -96,7 +96,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Setting density of the scattering factor
+     * Setting density of the crystal
      *
      * @param den
      */
@@ -105,7 +105,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning cutting angle of the scattering factor
+     * Returning cutting angle of the crystal
      *
      * @return
      */
@@ -114,7 +114,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Setting cutting angle of the scattering factor
+     * Setting cutting angle of the crystal
      *
      * @param theta
      */
@@ -123,7 +123,25 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning diffraction angle
+     * Returning thickness of the crystal
+     *
+     * @return
+     */
+    public double getThickness() {
+        return L;
+    }
+
+    /**
+     * Setting thickness of the crystal
+     *
+     * @param L
+     */
+    public void setL(double L) {
+        this.L = L;
+    }
+
+    /**
+     * Returning the diffraction angle
      *
      * @param phi incidence angle
      * @param wl wavelength
@@ -131,5 +149,37 @@ public class XrayCrystall {
      */
     public double getDiffAngle(double phi, double wl) {
         return Math.asin(Math.sin(phi) + wl / d * Math.sin(theta));
+    }
+
+    /**
+     * Returning the Bragg reflectivity
+     *
+     * @param phi incidence angle
+     * @param wl wavelength
+     * @return
+     */
+    public Complex getReflectivity(double phi, double wl) {
+        Complex K1, K2, p = null, R0, g, V1, V2, omega1, omega2;
+        double sphi, sphi1, qplus, qminus, rq,
+                k2 = Math.pow(2 * Math.PI / wl, 2);
+        sphi = Math.sin(phi);
+        sphi1 = sphi + wl / d * Math.sin(theta);
+        qplus = 2 * q * sphi / (sphi + sphi1);
+        qminus = 2 * q * sphi1 / (sphi + sphi1);
+        rq = Math.sqrt(qplus / qminus);
+        V1 = B.multiply(k2 / qplus);
+        V2 = B.multiply(k2 / qminus);
+        omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
+        omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
+        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
+        R0 = Complex.I.multiply(Complex.ONE.subtract(g.multiply(g)).sqrt()).
+                subtract(g);
+        p = B.multiply(Complex.ONE.subtract(g.multiply(g)).sqrt()).
+                multiply(2 * k2 / Math.sqrt(qplus * qminus));
+        K2 = R0.multiply(rq);
+        K1 = R0.divide(rq);
+        return p.multiply(-L).exp().subtract(1).
+                multiply(p.multiply(-L).exp().multiply(K1).multiply(K2).subtract(1)).
+                multiply(K2);
     }
 }
