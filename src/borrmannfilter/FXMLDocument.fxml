@@ -19,15 +19,15 @@
                <children>
                   <Label text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
                   <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  <TextField fx:id="f1Field" onAction="#handlef1FieldAction" text="0.00001" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="f1Field" text="0.00001" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                  <TextField fx:id="f2Field" onAction="#handlef2FieldAction" text="0.000001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="f2Field" text="0.000001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                  <TextField fx:id="dField" onAction="#handleDFieldAction" text="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="dField" text="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Density, cm⁻³ " GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                  <TextField fx:id="denField" onAction="#handleDenFieldAction" text="1" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label prefHeight="17.0" prefWidth="127.0" text="Cutting angle" GridPane.rowIndex="5" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="denField" text="1" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label prefHeight="17.0" prefWidth="127.0" text="Cutting angle, mrad" GridPane.rowIndex="5" />
+                  <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
                         <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />

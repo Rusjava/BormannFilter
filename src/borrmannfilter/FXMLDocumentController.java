@@ -36,7 +36,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label output;
     @FXML
-    private TextField f1Field, f2Field, dField, denField;
+    private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
 
@@ -46,45 +46,19 @@ public class FXMLDocumentController implements Initializable {
                 + " f2=" + f2 + " d=" + d + " den=" + den);
     }
 
-    /*
-     * Real part of the scaterring amplitude inputs
-     */
-    @FXML
-    private void handlef1FieldAction(ActionEvent event) {
-        f1 = Float.parseFloat(f1Field.getText());
-    }
-
-    /*
-     * Imagenery part of the scaterring amplitude inputs
-     */
-    @FXML
-    private void handlef2FieldAction(ActionEvent event) {
-        f2 = Float.parseFloat(f2Field.getText());
-    }
-
-    /*
-     * Interplane distance inputs
-     */
-    @FXML
-    private void handleDFieldAction(ActionEvent event) {
-        d = Float.parseFloat(dField.getText());
-    }
-
-    /*
-     * Density inputs
-     */
-    @FXML
-    private void handleDenFieldAction(ActionEvent event) {
-        den = Float.parseFloat(denField.getText());
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        f1Field.textProperty().addListener(event -> f1 = (f1Field.getText().length() == 0) ? 0 : Float.parseFloat(f1Field.getText()));
-        f2Field.textProperty().addListener(event -> f2 = (f2Field.getText().length() == 0) ? 0 : Float.parseFloat(f2Field.getText()));
-        dField.textProperty().addListener(event -> d = (dField.getText().length() == 0) ? 0 : Float.parseFloat(dField.getText()));
-        denField.textProperty().addListener(event -> den = (denField.getText().length() == 0) ? 0 : Float.parseFloat(denField.getText()));
+        f1Field.textProperty().addListener(event -> f1 = (f1Field.getText().length() == 0) ?
+                0 : Float.parseFloat(f1Field.getText()));
+        f2Field.textProperty().addListener(event -> f2 = (f2Field.getText().length() == 0) ?
+                0 : Float.parseFloat(f2Field.getText()));
+        dField.textProperty().addListener(event -> d = (dField.getText().length() == 0) ?
+                0 : Float.parseFloat(dField.getText()) *1e-9);
+        denField.textProperty().addListener(event -> den = (denField.getText().length() == 0) ?
+                0 : Float.parseFloat(denField.getText()) *1e-3);
+        cutField.textProperty().addListener(event -> den = (cutField.getText().length() == 0) ?
+                0 : Float.parseFloat(cutField.getText()) *1e-3);
     }
 
     private double f1 = 0.00001, f2 = 0.000001, den = 1, d = 0.1;
