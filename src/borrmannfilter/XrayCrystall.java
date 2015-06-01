@@ -25,11 +25,16 @@ import org.apache.commons.math3.complex.*;
  */
 public class XrayCrystall {
 
-    private double d, den, theta, L, q, M;
+    private double d, den, theta, L, M;
     private Complex f, B, eps0;
     private final double KOEF = 1e-5;
 
     public XrayCrystall() {
+        d = 1e-10;
+        den = 0.002;
+        theta = 0;
+        L = 0.001;
+        M = 0.028;
         this.eps0 = new Complex(0);
         this.B = new Complex(0);
         this.f = new Complex(0);
@@ -162,9 +167,10 @@ public class XrayCrystall {
      * @return
      */
     public Complex getReflectivity(double phi, double wl) {
-        Complex K1, K2, p = null, R0, g, V1, V2, omega1, omega2;
-        double sphi, sphi1, qplus, qminus, rq,
-                k2 = Math.pow(2 * Math.PI / wl, 2);
+        Complex K1, K2, p, R0, g, V1, V2, omega1, omega2;
+        double sphi, sphi1, qplus, qminus, rq, q, k2;
+        k2 = Math.pow(2 * Math.PI / wl, 2);
+        q = Math.PI / d * Math.sin(theta);
         sphi = Math.sin(phi);
         sphi1 = sphi + wl / d * Math.sin(theta);
         qplus = 2 * q * sphi / (sphi + sphi1);
@@ -185,22 +191,23 @@ public class XrayCrystall {
                 multiply(p.multiply(-L).exp().multiply(K1).multiply(K2).subtract(1)).
                 multiply(K2);
     }
-    
+
     /**
      * Initializing object
      */
-    public void initialize () {
+    public void initialize() {
         B = f.multiply(KOEF * den / M);
         eps0 = B;
     }
-    
+
     /**
      * Returning the intensity Bragg reflectivity coefficient
+     *
      * @param phi
      * @param wl
      * @return
      */
-    public double getIReflectivity (double phi, double wl) {
+    public double getIReflectivity(double phi, double wl) {
         Complex r = getReflectivity(phi, wl);
         return r.conjugate().multiply(r).getReal();
     }
