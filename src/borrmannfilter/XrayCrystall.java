@@ -25,11 +25,14 @@ import org.apache.commons.math3.complex.*;
  */
 public class XrayCrystall {
 
-    private double d, den, theta, L, q;
-    private Complex f, B = null, eps0 = null;
+    private double d, den, theta, L, q, M;
+    private Complex f, B, eps0;
+    private final double KOEF = 1e-5;
 
     public XrayCrystall() {
-        this.f = new Complex(0, 0);
+        this.eps0 = new Complex(0);
+        this.B = new Complex(0);
+        this.f = new Complex(0);
     }
 
     /**
@@ -152,7 +155,7 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning the Bragg reflectivity
+     * Returning the amplitude Bragg reflectivity coefficient
      *
      * @param phi incidence angle
      * @param wl wavelength
@@ -172,14 +175,33 @@ public class XrayCrystall {
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
         g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
-        R0 = Complex.I.multiply(Complex.ONE.subtract(g.multiply(g)).sqrt()).
+        R0 = Complex.I.multiply(Complex.ONE.subtract(g.pow(2)).sqrt()).
                 subtract(g);
-        p = B.multiply(Complex.ONE.subtract(g.multiply(g)).sqrt()).
+        p = B.multiply(Complex.ONE.subtract(g.pow(2)).sqrt()).
                 multiply(2 * k2 / Math.sqrt(qplus * qminus));
         K2 = R0.multiply(rq);
         K1 = R0.divide(rq);
         return p.multiply(-L).exp().subtract(1).
                 multiply(p.multiply(-L).exp().multiply(K1).multiply(K2).subtract(1)).
                 multiply(K2);
+    }
+    
+    /**
+     * Initializing object
+     */
+    public void initialize () {
+        B = f.multiply(KOEF * den / M);
+        eps0 = B;
+    }
+    
+    /**
+     * Returning the intensity Bragg reflectivity coefficient
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getIReflectivity (double phi, double wl) {
+        Complex r = getReflectivity(phi, wl);
+        return r.conjugate().multiply(r).getReal();
     }
 }
