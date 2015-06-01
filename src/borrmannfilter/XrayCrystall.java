@@ -31,13 +31,12 @@ public class XrayCrystall {
 
     public XrayCrystall() {
         d = 1e-10;
-        den = 0.002;
+        den = 0.001;
         theta = 0;
         L = 0.001;
         M = 0.028;
-        this.eps0 = new Complex(0);
-        this.B = new Complex(0);
-        this.f = new Complex(0);
+        this.f = new Complex(1);
+        initialize ();
     }
 
     /**

@@ -24,7 +24,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+//import javafx.scene.chart.;
 
 /**
  *
@@ -39,27 +41,39 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
+    
+    private int size = 200;
+    
+    private double step = 2, offset = 33000;
+    
+    private final double conv = 12400 * 1e-10;
+    
+    private XrayCrystall crystal;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        output.setText("Parameters:" + " f1=" + f1
-                + " f2=" + f2 + " d=" + d + " den=" + den);
+        output.setText("Parameters:" + " f1=" + crystal.getF1()
+                + " f2=" + crystal.getF2() + " d=" + crystal.getD() 
+                + " den=" + crystal.getDen() + " cutting angle =" + crystal.getTheta());
+        offset = 0;
+        for (int i=0; i<size; i++) {
+            
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        f1Field.textProperty().addListener(event -> f1 = (f1Field.getText().length() == 0) ?
-                0 : Float.parseFloat(f1Field.getText()));
-        f2Field.textProperty().addListener(event -> f2 = (f2Field.getText().length() == 0) ?
-                0 : Float.parseFloat(f2Field.getText()));
-        dField.textProperty().addListener(event -> d = (dField.getText().length() == 0) ?
-                0 : Float.parseFloat(dField.getText()) *1e-9);
-        denField.textProperty().addListener(event -> den = (denField.getText().length() == 0) ?
-                0 : Float.parseFloat(denField.getText()) *1e-3);
-        cutField.textProperty().addListener(event -> den = (cutField.getText().length() == 0) ?
-                0 : Float.parseFloat(cutField.getText()) *1e-3);
+        crystal = new XrayCrystall();
+        f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0) ?
+                0 : Float.parseFloat(f1Field.getText())));
+        f2Field.textProperty().addListener(event -> crystal.setF2((f2Field.getText().length() == 0) ?
+                0 : Float.parseFloat(f2Field.getText())));
+        dField.textProperty().addListener(event -> crystal.setD((dField.getText().length() == 0) ?
+                0 : Float.parseFloat(dField.getText()) *1e-9));
+        denField.textProperty().addListener(event -> crystal.setDen((denField.getText().length() == 0) ?
+                0 : Float.parseFloat(denField.getText()) *1e-3));
+        cutField.textProperty().addListener(event -> crystal.setTheta((cutField.getText().length() == 0) ?
+                0 : Float.parseFloat(cutField.getText()) *1e-3));
     }
-
-    private double f1 = 0.00001, f2 = 0.000001, den = 1, d = 0.1;
 }
