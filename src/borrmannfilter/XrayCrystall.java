@@ -35,8 +35,8 @@ public class XrayCrystall {
         theta = 0;
         L = 0.001;
         M = 0.028;
-        this.f = new Complex(1);
-        initialize ();
+        this.f = new Complex(10000);
+        initialize();
     }
 
     /**
@@ -167,13 +167,15 @@ public class XrayCrystall {
      */
     public Complex getReflectivity(double phi, double wl) {
         Complex K1, K2, p, R0, g, V1, V2, omega1, omega2;
-        double sphi, sphi1, qplus, qminus, rq, q, k2;
+        double sphi, sphi1, cphi, cphi1, qplus, qminus, rq, q, k2;
         k2 = Math.pow(2 * Math.PI / wl, 2);
-        q = Math.PI / d * Math.sin(theta);
+        q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
+        cphi = Math.sqrt(1 - sphi * sphi);
         sphi1 = sphi + wl / d * Math.sin(theta);
-        qplus = 2 * q * sphi / (sphi + sphi1);
-        qminus = 2 * q * sphi1 / (sphi + sphi1);
+        cphi1 = Math.sqrt(1 - sphi1 * sphi1);
+        qplus = 2 * q * cphi / (cphi + cphi1);
+        qminus = 2 * q * cphi1 / (cphi + cphi1);
         rq = Math.sqrt(qplus / qminus);
         V1 = B.multiply(k2 / qplus);
         V2 = B.multiply(k2 / qminus);

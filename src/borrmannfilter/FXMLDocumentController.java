@@ -26,6 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.chart.XYChart.Data;
 //import javafx.scene.chart.;
 
 /**
@@ -42,33 +44,42 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 200;
+    private int size = 201;
 
-    private double step = 2, offset = 33000, angle = 0, lstep;
+    private double step = 0.2, offset = 33000, angle = 0;
 
     private final double CONV = 12400 * 1e-10;
+    private double [] data;
 
     private XrayCrystall crystal;
     
-    private Series S;
+    private Series<Number, Number> rSeries;
+    @FXML
+    private LineChart<Number, Number> mainChart;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        double wl, R;
+        double energy, R;
         output.setText("Parameters:" + " f1=" + crystal.getF1()
                 + " f2=" + crystal.getF2() + " d=" + crystal.getD()
                 + " den=" + crystal.getDen() + " cutting angle =" + crystal.getTheta());
-        offset = CONV / (2 * crystal.getD() * Math.sin(angle + crystal.getTheta()));
-        for (int i = 0; i < size; i++) {
-            wl = CONV / (offset + i * step);
-            R = crystal.getIReflectivity(angle, wl);
+        offset = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
+        for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
+            energy = offset + i * step;
+            R = crystal.getIReflectivity(angle, CONV / energy);
+            rSeries.getData().add(new Data<Number, Number> (energy, R));
+            data[i + (size - 1) / 2] = R;
         }
+        mainChart.getData().add(rSeries);
+        //mainChart.getXAxis().
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         crystal = new XrayCrystall();
+        rSeries = new Series<>();
+        data = new double[size];
         f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0)
                 ? 0 : Float.parseFloat(f1Field.getText())));
         f2Field.textProperty().addListener(event -> crystal.setF2((f2Field.getText().length() == 0)

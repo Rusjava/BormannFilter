@@ -19,9 +19,9 @@
                <children>
                   <Label text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
                   <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  <TextField fx:id="f1Field" text="0.00001" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="f1Field" text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                  <TextField fx:id="f2Field" text="0.000001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="f2Field" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
                   <TextField fx:id="dField" text="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Density, cm⁻³ " GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -59,7 +59,7 @@
                   <Label fx:id="output" minWidth="100.0" styleClass="out" text="Parameters:" BorderPane.alignment="CENTER" />
                </top>
                <center>
-                  <LineChart BorderPane.alignment="CENTER">
+                  <LineChart fx:id="mainChart" BorderPane.alignment="CENTER">
                     <xAxis>
                       <NumberAxis side="BOTTOM" />
                     </xAxis>
