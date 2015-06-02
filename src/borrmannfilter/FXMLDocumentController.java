@@ -44,11 +44,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 201;
+    private int size = 41;
 
-    private double step = 0.4, offset = 33000, angle = 0;
+    private double step = 0.02, offset = 33000, angle = Math.PI / 3;
 
-    private final double CONV = 12400 * 1e-10;
+    private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
     private double[] data;
 
     private XrayCrystall crystal;

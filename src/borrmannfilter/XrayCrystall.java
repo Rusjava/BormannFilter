@@ -25,18 +25,21 @@ import org.apache.commons.math3.complex.*;
  */
 public class XrayCrystall {
 
-    private double d, den, theta, L, M;
-    private Complex f, B, eps0;
-    private final double KOEF = 1e-5;
+    private double d, den, theta, L, M, sphi, cphi, sphi1, cphi1;
+    private Complex f;
+
+    /**
+     * Coefficient for the electrical susceptibility calculation
+     */
+    public final static double COEF = 6.02e23 * 2.81794e-15 / 2 / Math.PI;
 
     public XrayCrystall() {
-        d = 1e-10;
-        den = 0.001;
+        d = 1.92e-10;
+        den = 2000;
         theta = 0;
         L = 0.001;
-        M = 0.028;
-        this.f = new Complex(-10000);
-        initialize();
+        M = 0.02809;
+        this.f = new Complex(-14.321, 0.494);
     }
 
     /**
@@ -166,8 +169,10 @@ public class XrayCrystall {
      * @return
      */
     public Complex getReflectivity(double phi, double wl) {
-        Complex K1, K2, ex, R0, g, V1, V2, omega1, omega2, sq;
-        double sphi, sphi1, cphi, cphi1, qplus, qminus, rq, q, k2;
+        Complex K1, K2, ex, R0, R, g, B, eps0, omega1, omega2, sq;
+        double qplus, qminus, rq, q, k2;
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
@@ -177,15 +182,10 @@ public class XrayCrystall {
         qplus = 2 * q * cphi / (cphi + cphi1);
         qminus = 2 * q * cphi1 / (cphi + cphi1);
         rq = Math.sqrt(qplus / qminus);
-        V1 = B.multiply(k2 / qplus);
-        V2 = B.multiply(k2 / qminus);
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
         g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
         sq = Complex.ONE.subtract(g.pow(2)).sqrt();
-        if (sq.getImaginary() * g.getImaginary() > 0) {
-            sq = sq.negate();
-        }
         R0 = Complex.I.multiply(sq).subtract(g);
         ex = B.multiply(sq).multiply(2 * k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
         if (ex.isNaN() || ex.isInfinite()) {
@@ -193,16 +193,22 @@ public class XrayCrystall {
         }
         K2 = R0.multiply(rq);
         K1 = R0.divide(rq);
-        return ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
+        R=ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
                 multiply(K2);
-    }
-
-    /**
-     * Initializing object
-     */
-    public void initialize() {
-        B = f.multiply(KOEF * den / M);
-        eps0 = B.add(1);
+        if (R.abs() > 1) {
+            sq = sq.negate();
+            //R0 = Complex.I.multiply(sq).subtract(g);
+            ex = B.multiply(sq).multiply(2 * k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
+            if (ex.isNaN() || ex.isInfinite()) {
+                ex = new Complex(0);
+            }
+            //K2 = R0.multiply(rq);
+            //K1 = R0.divide(rq);
+            R=ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
+            multiply(K2);
+        } 
+        
+        return R;
     }
 
     /**
@@ -214,6 +220,6 @@ public class XrayCrystall {
      */
     public double getIReflectivity(double phi, double wl) {
         Complex r = getReflectivity(phi, wl);
-        return r.conjugate().multiply(r).getReal();
+        return r.conjugate().multiply(r).getReal() * cphi1 / cphi;
     }
 }
