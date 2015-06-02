@@ -35,7 +35,7 @@ public class XrayCrystall {
         theta = 0;
         L = 0.001;
         M = 0.028;
-        this.f = new Complex(10000);
+        this.f = new Complex(-10000);
         initialize();
     }
 
@@ -54,7 +54,7 @@ public class XrayCrystall {
      * @param f1
      */
     public void setF1(double f1) {
-        f = new Complex(f1, f.getImaginary());
+        f = new Complex(-f1, f.getImaginary());
     }
 
     /**
@@ -166,7 +166,7 @@ public class XrayCrystall {
      * @return
      */
     public Complex getReflectivity(double phi, double wl) {
-        Complex K1, K2, p, R0, g, V1, V2, omega1, omega2;
+        Complex K1, K2, ex, R0, g, V1, V2, omega1, omega2, sq;
         double sphi, sphi1, cphi, cphi1, qplus, qminus, rq, q, k2;
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
@@ -182,14 +182,18 @@ public class XrayCrystall {
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
         g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
-        R0 = Complex.I.multiply(Complex.ONE.subtract(g.pow(2)).sqrt()).
-                subtract(g);
-        p = B.multiply(Complex.ONE.subtract(g.pow(2)).sqrt()).
-                multiply(2 * k2 / Math.sqrt(qplus * qminus));
+        sq = Complex.ONE.subtract(g.pow(2)).sqrt();
+        if (sq.getImaginary() * g.getImaginary() < 0) {
+            sq = sq.negate();
+        }
+        R0 = Complex.I.multiply(sq).subtract(g);
+        ex = B.multiply(sq).multiply(2 * k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
+        if (ex.isNaN() || ex.isInfinite()) {
+            ex = new Complex(0);
+        }
         K2 = R0.multiply(rq);
         K1 = R0.divide(rq);
-        return p.multiply(-L).exp().subtract(1).
-                multiply(p.multiply(-L).exp().multiply(K1).multiply(K2).subtract(1)).
+        return ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
                 multiply(K2);
     }
 
@@ -198,7 +202,7 @@ public class XrayCrystall {
      */
     public void initialize() {
         B = f.multiply(KOEF * den / M);
-        eps0 = B;
+        eps0 = B.add(1);
     }
 
     /**

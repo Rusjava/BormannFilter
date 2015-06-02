@@ -44,9 +44,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 201;
+    private int size = 21;
 
-    private double step = 0.2, offset = 33000, angle = 0;
+    private double step = 2, offset = 33000, angle = 0;
 
     private final double CONV = 12400 * 1e-10;
     private double [] data;
