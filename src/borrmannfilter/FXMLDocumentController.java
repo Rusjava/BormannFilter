@@ -44,15 +44,15 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 21;
+    private int size = 201;
 
-    private double step = 2, offset = 33000, angle = 0;
+    private double step = 0.4, offset = 33000, angle = 0;
 
     private final double CONV = 12400 * 1e-10;
-    private double [] data;
+    private double[] data;
 
     private XrayCrystall crystal;
-    
+
     private Series<Number, Number> rSeries;
     @FXML
     private LineChart<Number, Number> mainChart;
@@ -67,11 +67,12 @@ public class FXMLDocumentController implements Initializable {
         for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
             energy = offset + i * step;
             R = crystal.getIReflectivity(angle, CONV / energy);
-            rSeries.getData().add(new Data<Number, Number> (energy, R));
+            rSeries.getData().add(new Data<Number, Number>(energy, R));
             data[i + (size - 1) / 2] = R;
         }
         mainChart.getData().add(rSeries);
-        //mainChart.getXAxis().
+        ((NumberAxis) mainChart.getXAxis()).setForceZeroInRange(false);
+        mainChart. setCreateSymbols(false);
     }
 
     @Override

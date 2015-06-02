@@ -183,7 +183,7 @@ public class XrayCrystall {
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
         g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
         sq = Complex.ONE.subtract(g.pow(2)).sqrt();
-        if (sq.getImaginary() * g.getImaginary() < 0) {
+        if (sq.getImaginary() * g.getImaginary() > 0) {
             sq = sq.negate();
         }
         R0 = Complex.I.multiply(sq).subtract(g);
