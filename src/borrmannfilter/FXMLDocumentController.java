@@ -44,9 +44,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 41;
+    private int size = 201;
 
-    private double step = 0.02, offset = 33000, angle = Math.PI / 3;
+    private double step = 0.005, offset = 33000, angle = Math.PI / 3;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
     private double[] data;
@@ -71,8 +71,20 @@ public class FXMLDocumentController implements Initializable {
             data[i + (size - 1) / 2] = R;
         }
         mainChart.getData().add(rSeries);
+        mainChart.setCreateSymbols(false);
+        //Formatting X-axis
+        ((NumberAxis) mainChart.getXAxis()).setAutoRanging(false);
         ((NumberAxis) mainChart.getXAxis()).setForceZeroInRange(false);
-        mainChart. setCreateSymbols(false);
+        ((NumberAxis) mainChart.getXAxis()).setTickUnit(step * 50);
+        ((NumberAxis) mainChart.getXAxis()).setLabel("Energy, eV");
+        ((NumberAxis) mainChart.getXAxis()).setUpperBound(offset + size * step / 2);
+        ((NumberAxis) mainChart.getXAxis()).setLowerBound(offset - (size - 1) * step / 2);
+        //Formatting Y-axis
+        ((NumberAxis) mainChart.getYAxis()).setTickUnit(0.2);
+        ((NumberAxis) mainChart.getYAxis()).setAutoRanging(false);
+        ((NumberAxis) mainChart.getYAxis()).setUpperBound(1);
+        ((NumberAxis) mainChart.getYAxis()).setLabel("Reflectivity");
+
     }
 
     @Override
