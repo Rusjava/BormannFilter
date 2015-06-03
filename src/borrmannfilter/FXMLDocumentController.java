@@ -67,7 +67,7 @@ public class FXMLDocumentController implements Initializable {
         for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
             energy = offset + i * step;
             R = crystal.getIReflectivity(angle, CONV / energy);
-            rSeries.getData().add(new Data<Number, Number>(energy, R));
+            rSeries.getData().add(new Data<>(energy, R));
             data[i + (size - 1) / 2] = R;
         }
         mainChart.getData().add(rSeries);
