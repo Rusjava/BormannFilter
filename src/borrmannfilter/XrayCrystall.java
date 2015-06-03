@@ -169,7 +169,7 @@ public class XrayCrystall {
      * @return
      */
     public Complex getReflectivity(double phi, double wl) {
-        Complex K1, K2, ex, R0, R, g, B, eps0, omega1, omega2, sq;
+        Complex K1, K2, ex, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2;
         B = f.multiply(COEF * wl * wl * den / M);
         eps0 = B.add(1);
@@ -184,31 +184,19 @@ public class XrayCrystall {
         rq = Math.sqrt(qplus / qminus);
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
-        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus / 2)).divide(B);
+        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus)).divide(B);
         sq = Complex.ONE.subtract(g.pow(2)).sqrt();
         R0 = Complex.I.multiply(sq).subtract(g);
-        ex = B.multiply(sq).multiply(2 * k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
-        if (ex.isNaN() || ex.isInfinite()) {
-            ex = new Complex(0);
-        }
         K2 = R0.multiply(rq);
         K1 = R0.divide(rq);
-        R=ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
-                multiply(K2);
-        if (R.abs() > 1) {
-            sq = sq.negate();
-            //R0 = Complex.I.multiply(sq).subtract(g);
-            ex = B.multiply(sq).multiply(2 * k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
-            if (ex.isNaN() || ex.isInfinite()) {
-                ex = new Complex(0);
-            }
-            //K2 = R0.multiply(rq);
-            //K1 = R0.divide(rq);
-            R=ex.subtract(1).divide(ex.multiply(K1).multiply(K2).subtract(1)).
-            multiply(K2);
-        } 
-        
-        return R;
+        ex = B.multiply(sq).multiply(k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
+        if (ex.isNaN()) {
+            return K2;
+        }  
+        if (ex.isInfinite()) {
+            return K1.reciprocal();
+        }  
+        return ex.subtract(1).divide(ex.subtract(K1.multiply(K2).reciprocal())).divide(K1); 
     }
 
     /**
