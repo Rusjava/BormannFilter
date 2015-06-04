@@ -37,7 +37,7 @@ public class XrayCrystall {
         d = 1.92e-10;
         den = 2000;
         theta = 0;
-        L = 0.001;
+        L = 0.00025;
         M = 0.02809;
         this.f = new Complex(-14.321, 0.494);
     }

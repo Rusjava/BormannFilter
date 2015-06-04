@@ -66,9 +66,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         double energy, R, T;
-        output.setText("Parameters:" + " f1=" + crystal.getF1()
-                + " f2=" + crystal.getF2() + " d=" + crystal.getD()
-                + " den=" + crystal.getDen() + " cutting angle =" + crystal.getTheta());
+        mainChart.getData().clear();
+        rSeries = new Series<>();
+        tSeries = new Series<>();
+        output.setText("Graph description: " + "Bragg diffraction, first order");
         offset = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
         for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
             energy = offset + i * step;
@@ -99,8 +100,6 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         crystal = new XrayCrystall();
-        rSeries = new Series<>();
-        tSeries = new Series<>();
         data = new double[size];
         f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0)
                 ? 0 : Float.parseFloat(f1Field.getText())));
