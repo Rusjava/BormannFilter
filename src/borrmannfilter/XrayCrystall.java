@@ -149,6 +149,24 @@ public class XrayCrystall {
     public void setL(double L) {
         this.L = L;
     }
+    
+    /**
+     * Returning molar mass of the crystal material
+     *
+     * @return
+     */
+    public double getM() {
+        return M;
+    }
+    
+    /**
+     * Setting molar mass of the crystal material
+     *
+     * @param M
+     */
+    public void setM(double M) {
+        this.M = M;
+    }
 
     /**
      * Returning the diffraction angle

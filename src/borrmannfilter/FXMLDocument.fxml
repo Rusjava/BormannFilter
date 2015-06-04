@@ -11,50 +11,83 @@
 <?import javafx.scene.text.*?>
 <?import java.net.*?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="400.0">
+    <AnchorPane minHeight="0.0" minWidth="400.0" prefWidth="700.0">
          <children>
             <GridPane hgap="10" layoutX="20.0" layoutY="20.0" prefHeight="230.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <Label text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
-                  <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                  <TextField fx:id="f2Field" text="0.494" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                  <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Density, cm⁻³ " GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                  <TextField fx:id="denField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label prefHeight="17.0" prefWidth="127.0" text="Cutting angle, mrad" GridPane.rowIndex="5" />
-                  <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                     <children>
-                        <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
-                     </children>
-                  </HBox>
-               </children>
-               <columnConstraints>
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-               </columnConstraints>
-               <padding>
-                  <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
-               </padding>
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
+                    <Label text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
+                    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <children>
+                            <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="f2Field" text="0.494" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <Label text="Density, cm⁻³ " GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <TextField fx:id="denField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Label prefHeight="17.0" prefWidth="127.0" text="Molar mass, g/mol" GridPane.rowIndex="5" />
+                            <TextField fx:id="MField" text="28.09" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        </children>
+                        <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            </rowConstraints>
+                    </GridPane>
+                    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <children>
+                            <Label text="Thickness, mm: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="LField" text="0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Incidence angle, grad: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="thetaField" text="60" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="Cutting angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        </children>
+                        <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        </columnConstraints>
+                        <padding>
+                            <Insets left="25.0"/>
+                        </padding>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            </rowConstraints>
+                    </GridPane>
+                    <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <children>
+                            <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
+                        </children>
+                    </HBox>
+                </children>
+                <padding>
+                    <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
+                </padding>
             </GridPane>
-            <BorderPane prefHeight="200.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="285.0">
+            <BorderPane prefHeight="300.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="285.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="out" text="Parameters:" BorderPane.alignment="CENTER" />
                </top>

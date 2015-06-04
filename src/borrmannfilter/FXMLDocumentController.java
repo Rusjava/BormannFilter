@@ -46,7 +46,7 @@ public class FXMLDocumentController implements Initializable {
 
     private int size = 401;
 
-    private double step = 0.005, offset = 33000, angle = Math.PI / 3;
+    private double step = 0.0025, offset = 33000, angle = Math.PI / 3;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
     private double[] data;
@@ -56,6 +56,12 @@ public class FXMLDocumentController implements Initializable {
     private Series<Number, Number> rSeries, tSeries;
     @FXML
     private LineChart<Number, Number> mainChart;
+    @FXML
+    private TextField MField;
+    @FXML
+    private TextField LField;
+    @FXML
+    private TextField thetaField;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -96,7 +102,6 @@ public class FXMLDocumentController implements Initializable {
         rSeries = new Series<>();
         tSeries = new Series<>();
         data = new double[size];
-        crystal.setL(0.0002);
         f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0)
                 ? 0 : Float.parseFloat(f1Field.getText())));
         f2Field.textProperty().addListener(event -> crystal.setF2((f2Field.getText().length() == 0)
@@ -104,8 +109,14 @@ public class FXMLDocumentController implements Initializable {
         dField.textProperty().addListener(event -> crystal.setD((dField.getText().length() == 0)
                 ? 0 : Float.parseFloat(dField.getText()) * 1e-9));
         denField.textProperty().addListener(event -> crystal.setDen((denField.getText().length() == 0)
-                ? 0 : Float.parseFloat(denField.getText()) * 1e-3));
+                ? 0 : Float.parseFloat(denField.getText()) * 1e3));
         cutField.textProperty().addListener(event -> crystal.setTheta((cutField.getText().length() == 0)
-                ? 0 : Float.parseFloat(cutField.getText()) * 1e-3));
+                ? 0 : Float.parseFloat(cutField.getText()) * Math.PI / 180));
+        thetaField.textProperty().addListener(event -> angle = (thetaField.getText().length() == 0)
+                ? 0 : Float.parseFloat(thetaField.getText()) * Math.PI / 180);
+        LField.textProperty().addListener(event -> crystal.setL((LField.getText().length() == 0)
+                ? 0 : Float.parseFloat(LField.getText()) * 1e-3));
+        MField.textProperty().addListener(event -> crystal.setM((MField.getText().length() == 0)
+                ? 0 : Float.parseFloat(MField.getText()) * 1e-3));
     }
 }
