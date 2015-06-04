@@ -137,7 +137,7 @@ public class XrayCrystall {
      *
      * @return
      */
-    public double getThickness() {
+    public double getL() {
         return L;
     }
 
@@ -168,7 +168,7 @@ public class XrayCrystall {
      * @param wl wavelength
      * @return
      */
-    public Complex getReflectivity(double phi, double wl) {
+    public Complex getBraggReflectivity(double phi, double wl) {
         Complex K1, K2, ex, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2;
         B = f.multiply(COEF * wl * wl * den / M);
@@ -192,11 +192,11 @@ public class XrayCrystall {
         ex = B.multiply(sq).multiply(k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
         if (ex.isNaN()) {
             return K2;
-        }  
+        }
         if (ex.isInfinite()) {
             return K1.reciprocal();
-        }  
-        return ex.subtract(1).divide(ex.subtract(K1.multiply(K2).reciprocal())).divide(K1); 
+        }
+        return ex.subtract(1).divide(ex.subtract(K1.multiply(K2).reciprocal())).divide(K1);
     }
 
     /**
@@ -206,8 +206,61 @@ public class XrayCrystall {
      * @param wl
      * @return
      */
-    public double getIReflectivity(double phi, double wl) {
-        Complex r = getReflectivity(phi, wl);
+    public double getBraggIReflectivity(double phi, double wl) {
+        Complex r = getBraggReflectivity(phi, wl);
         return r.conjugate().multiply(r).getReal() * cphi1 / cphi;
+    }
+
+    /**
+     * Returning the amplitude Bragg transmitivity coefficient
+     *
+     * @param phi incidence angle
+     * @param wl wavelength
+     * @return
+     */
+    public Complex getBraggTransmitivity(double phi, double wl) {
+        Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq, rec;
+        double qplus, qminus, rq, q, k2;
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        k2 = Math.pow(2 * Math.PI / wl, 2);
+        q = Math.PI / d * Math.cos(theta);
+        sphi = Math.sin(phi);
+        cphi = Math.sqrt(1 - sphi * sphi);
+        sphi1 = sphi + wl / d * Math.sin(theta);
+        cphi1 = Math.sqrt(1 - sphi1 * sphi1);
+        qplus = 2 * q * cphi / (cphi + cphi1);
+        qminus = 2 * q * cphi1 / (cphi + cphi1);
+        rq = Math.sqrt(qplus / qminus);
+        omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
+        omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
+        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus)).divide(B);
+        sq = Complex.ONE.subtract(g.pow(2)).sqrt();
+        R0 = Complex.I.multiply(sq).subtract(g);
+        K2 = R0.multiply(rq);
+        K1 = R0.divide(rq);
+        ex = B.multiply(sq).multiply(k2 / Math.sqrt(qplus * qminus)).multiply(-L).exp();
+        ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(qplus * qminus)).
+                subtract(Complex.I.multiply(omega1.subtract(omega2))).multiply(-L / 2).exp();
+        if (ex.isNaN()) {
+            return K2.multiply(K1).subtract(1).multiply(ex1).negate();
+        }
+        if (ex.isInfinite() || ex1.isNaN()) {
+            return Complex.ZERO;
+        }
+        rec = K1.multiply(K2).reciprocal();
+        return Complex.ONE.subtract(rec).multiply(ex1).divide(ex.subtract(rec));
+    }
+    
+     /**
+     * Returning the intensity Bragg transmitivity coefficient
+     *
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getBraggITransmitivity(double phi, double wl) {
+        Complex t = getBraggTransmitivity(phi, wl);
+        return t.conjugate().multiply(t).getReal();
     }
 }

@@ -44,7 +44,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
 
-    private int size = 201;
+    private int size = 401;
 
     private double step = 0.005, offset = 33000, angle = Math.PI / 3;
 
@@ -53,24 +53,27 @@ public class FXMLDocumentController implements Initializable {
 
     private XrayCrystall crystal;
 
-    private Series<Number, Number> rSeries;
+    private Series<Number, Number> rSeries, tSeries;
     @FXML
     private LineChart<Number, Number> mainChart;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        double energy, R;
+        double energy, R, T;
         output.setText("Parameters:" + " f1=" + crystal.getF1()
                 + " f2=" + crystal.getF2() + " d=" + crystal.getD()
                 + " den=" + crystal.getDen() + " cutting angle =" + crystal.getTheta());
         offset = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
         for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
             energy = offset + i * step;
-            R = crystal.getIReflectivity(angle, CONV / energy);
+            R = crystal.getBraggIReflectivity(angle, CONV / energy);
+            T = crystal.getBraggITransmitivity(angle, CONV / energy);
             rSeries.getData().add(new Data<>(energy, R));
-            data[i + (size - 1) / 2] = R;
+            tSeries.getData().add(new Data<>(energy, T));
+            data[i + (size - 1) / 2] = T;
         }
         mainChart.getData().add(rSeries);
+        mainChart.getData().add(tSeries);
         mainChart.setCreateSymbols(false);
         //Formatting X-axis
         ((NumberAxis) mainChart.getXAxis()).setAutoRanging(false);
@@ -83,8 +86,7 @@ public class FXMLDocumentController implements Initializable {
         ((NumberAxis) mainChart.getYAxis()).setTickUnit(0.2);
         ((NumberAxis) mainChart.getYAxis()).setAutoRanging(false);
         ((NumberAxis) mainChart.getYAxis()).setUpperBound(1);
-        ((NumberAxis) mainChart.getYAxis()).setLabel("Reflectivity");
-
+        ((NumberAxis) mainChart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
     }
 
     @Override
@@ -92,7 +94,9 @@ public class FXMLDocumentController implements Initializable {
         // TODO
         crystal = new XrayCrystall();
         rSeries = new Series<>();
+        tSeries = new Series<>();
         data = new double[size];
+        crystal.setL(0.0002);
         f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0)
                 ? 0 : Float.parseFloat(f1Field.getText())));
         f2Field.textProperty().addListener(event -> crystal.setF2((f2Field.getText().length() == 0)
