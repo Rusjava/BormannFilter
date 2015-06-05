@@ -10,6 +10,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.*?>
+<?import javafx.collections.*?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
   <content>
@@ -36,7 +37,14 @@
                             <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <Label text="Thickness, mm: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
                             <TextField fx:id="LField" text="0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />   
-                            <Label  text="Incidence angle, degree:" GridPane.columnIndex="0" GridPane.rowIndex="2" />                          
+                            <ChoiceBox  fx:id="enAngChoiceBox" value="Incidence angle, degree:" GridPane.columnIndex="0" GridPane.rowIndex="2" > 
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Incidence angle, degree:"/>
+                                        <String fx:value="Energy, eV:"/>
+                                    </FXCollections>
+                                </items>                         
+                            </ChoiceBox>
                             <TextField fx:id="thetaField" text="60" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <Label text="Cutting angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
                             <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />

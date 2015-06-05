@@ -31,6 +31,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Slider;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.control.ChoiceBox;
 
 /**
  *
@@ -70,6 +71,8 @@ public class FXMLDocumentController implements Initializable {
     private Button saveButton;
     @FXML
     private Slider xScaleSlider;
+    @FXML
+    private ChoiceBox<?> enAngChoiceBox;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
