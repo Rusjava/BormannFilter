@@ -202,7 +202,7 @@ public class XrayCrystall {
         rq = Math.sqrt(qplus / qminus);
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
-        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus)).divide(B);
+        g = omega1.add(omega2).multiply(Math.sqrt(qplus * qminus) / k2).divide(B);
         sq = Complex.ONE.subtract(g.pow(2)).sqrt();
         R0 = Complex.I.multiply(sq).subtract(g);
         K2 = R0.multiply(rq);
@@ -252,7 +252,7 @@ public class XrayCrystall {
         rq = Math.sqrt(qplus / qminus);
         omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
         omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
-        g = omega1.add(omega2).divide(k2).multiply(Math.sqrt(qplus * qminus)).divide(B);
+        g = omega1.add(omega2).multiply(Math.sqrt(qplus * qminus) / k2).divide(B);
         sq = Complex.ONE.subtract(g.pow(2)).sqrt();
         R0 = Complex.I.multiply(sq).subtract(g);
         K2 = R0.multiply(rq);

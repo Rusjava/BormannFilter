@@ -18,6 +18,7 @@ package borrmannfilter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,8 +31,12 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Slider;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -48,8 +53,10 @@ public class FXMLDocumentController implements Initializable {
     private Button button;
 
     private int size = 401;
+    private Map<String, String> defaultStringMap;
 
-    private double stepZero = 0.005, offset = 33000, angle = Math.PI / 3;
+    private double stepZero = 0.005, offset = 33000,
+            angle = Math.PI / 3, energy;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
     private double[] data;
@@ -57,6 +64,7 @@ public class FXMLDocumentController implements Initializable {
     private XrayCrystall crystal;
     
     private DoubleProperty scale;
+    private BooleanProperty isAngle;
 
     private Series<Number, Number> rSeries, tSeries;
     @FXML
@@ -83,8 +91,13 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         crystal = new XrayCrystall();
+        energy = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
         data = new double[size];
         scale = new SimpleDoubleProperty(1);
+        isAngle = new SimpleBooleanProperty(true);
+        defaultStringMap = new HashMap<>();
+        defaultStringMap.put("Incidence angle, degree:", "60");
+        defaultStringMap.put("Energy, eV:", "6457.96");
         f1Field.textProperty().addListener(event -> crystal.setF1((f1Field.getText().length() == 0)
                 ? 0 : Float.parseFloat(f1Field.getText())));
         f2Field.textProperty().addListener(event -> crystal.setF2((f2Field.getText().length() == 0)
@@ -103,6 +116,10 @@ public class FXMLDocumentController implements Initializable {
                 ? 0 : Float.parseFloat(MField.getText()) * 1e-3));
         //Binding scale property to X-scale slider
         scale.bind(xScaleSlider.valueProperty());
+        isAngle.bind(Bindings.createBooleanBinding(() -> 
+                ((String)enAngChoiceBox.getValue()).equals("Incidence angle, degree:"), enAngChoiceBox.valueProperty()));
+        thetaField.textProperty().bind(Bindings.createStringBinding(() -> 
+                (String)enAngChoiceBox.getValue(), enAngChoiceBox.valueProperty())); 
     }
 
     @FXML
