@@ -95,6 +95,7 @@ public class FXMLDocumentController implements Initializable {
         data = new double[size];
         scale = new SimpleDoubleProperty(1);
         isAngle = new SimpleBooleanProperty(true);
+        //Defining map of default values
         defaultStringMap = new HashMap<>();
         defaultStringMap.put("Incidence angle, degree:", "60");
         defaultStringMap.put("Energy, eV:", "6457.96");
@@ -116,14 +117,17 @@ public class FXMLDocumentController implements Initializable {
                 ? 0 : Float.parseFloat(MField.getText()) * 1e-3));
         //Binding scale property to X-scale slider
         scale.bind(xScaleSlider.valueProperty());
+        //Binging isAngle variable to enAngChoiceBox
         isAngle.bind(Bindings.createBooleanBinding(() -> 
                 ((String)enAngChoiceBox.getValue()).equals("Incidence angle, degree:"), enAngChoiceBox.valueProperty()));
-        thetaField.textProperty().bind(Bindings.createStringBinding(() -> 
-                (String)enAngChoiceBox.getValue(), enAngChoiceBox.valueProperty())); 
+        //Switching thetaField default value when switching between anergy and angle
+        enAngChoiceBox.valueProperty().addListener((event) -> 
+                 thetaField.setText(defaultStringMap.get(enAngChoiceBox.getValue()))); 
     }
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
+        
     }
     
     private void updateGraph () {
