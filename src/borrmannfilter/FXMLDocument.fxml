@@ -15,10 +15,10 @@
   <content>
     <AnchorPane minHeight="0.0" minWidth="400.0" prefWidth="700.0">
          <children>
-            <GridPane hgap="10" layoutX="20.0" layoutY="20.0" prefHeight="150.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <GridPane hgap="10" layoutX="20.0" layoutY="20.0" prefHeight="220.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <children>
                     <Label styleClass="BoxText" text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
-                    <GridPane vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <GridPane vgap="10" hgap="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <children>
                             <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -30,13 +30,13 @@
                             <TextField fx:id="MField" text="28.09" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         </children>    
                     </GridPane>
-                    <GridPane vgap="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <GridPane vgap="10" hgap="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <children>
                             <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <Label text="Thickness, mm: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <TextField fx:id="LField" text="0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="Incidence angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="LField" text="0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />   
+                            <Label  text="Incidence angle, degree:" GridPane.columnIndex="0" GridPane.rowIndex="2" />                          
                             <TextField fx:id="thetaField" text="60" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <Label text="Cutting angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
                             <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -46,9 +46,12 @@
                         </padding>
                     </GridPane>
                     <Label styleClass="BoxText" text="Graph parameters" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
-                    <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <Label text="X-axis scale" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Slider fx:id="xScaleSlider" majorTickUnit="1"  showTickLabels="true" showTickMarks="true"  min="0" max="10" value="1" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                    <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
                         <children>
                             <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
+                            <Button fx:id="saveButton" alignment="CENTER_RIGHT" onAction="#handleSaveButtonAction" text="Save" />
                         </children>
                     </HBox>
                 </children>
@@ -56,7 +59,7 @@
                     <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
                 </padding>
             </GridPane>
-            <BorderPane prefHeight="300.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="240.0">
+            <BorderPane prefHeight="300.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="350.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="BoxText" text="Graph description:" BorderPane.alignment="CENTER" />
                </top>

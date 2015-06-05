@@ -31,7 +31,7 @@ public class XrayCrystall {
     /**
      * Coefficient for the electrical susceptibility calculation
      */
-    public final static double COEF = 6.02e23 * 2.81794e-15 / 2 / Math.PI;
+    public final static double COEF = 6.02e23 * 2.81794e-15 / Math.PI;
 
     public XrayCrystall() {
         d = 1.92e-10;
