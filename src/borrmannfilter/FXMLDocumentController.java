@@ -37,6 +37,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -215,5 +216,17 @@ public class FXMLDocumentController implements Initializable {
         }
         oldStrings.replace(field, newStr);
         return value;
+    }
+
+    @FXML
+    private void handleCloseMenuAction(ActionEvent event) {
+        System.exit(0);
+    }
+
+    @FXML
+    private void handleAboutMenuAction(ActionEvent event) {
+        javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
+                "<html>Crystal diffraction calculations. <br>Version: 0.1 <br>Date: June 2015. <br>Author: Ruslan Feshchenko</html>",
+                "About Borrmann filter application", 1));
     }
 }
