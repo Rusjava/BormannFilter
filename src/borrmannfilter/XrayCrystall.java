@@ -25,7 +25,7 @@ import org.apache.commons.math3.complex.*;
  */
 public class XrayCrystall {
 
-    private double d, den, theta, L, M, sphi, cphi, sphi1, cphi1;
+    private double d, den, theta, L, M;
     private Complex f;
 
     /**
@@ -149,7 +149,7 @@ public class XrayCrystall {
     public void setL(double L) {
         this.L = L;
     }
-    
+
     /**
      * Returning molar mass of the crystal material
      *
@@ -158,7 +158,7 @@ public class XrayCrystall {
     public double getM() {
         return M;
     }
-    
+
     /**
      * Setting molar mass of the crystal material
      *
@@ -180,6 +180,17 @@ public class XrayCrystall {
     }
 
     /**
+     * Returning the sinus of diffraction angle
+     *
+     * @param phi incidence angle
+     * @param wl wavelength
+     * @return
+     */
+    public double getDiffAngleSin(double phi, double wl) {
+        return Math.sin(phi) + wl / d * Math.sin(theta);
+    }
+
+    /**
      * Returning the amplitude Bragg reflectivity coefficient
      *
      * @param phi incidence angle
@@ -188,14 +199,14 @@ public class XrayCrystall {
      */
     public Complex getBraggReflectivity(double phi, double wl) {
         Complex K1, K2, ex, R0, g, B, eps0, omega1, omega2, sq;
-        double qplus, qminus, rq, q, k2;
+        double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
         B = f.multiply(COEF * wl * wl * den / M);
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
-        cphi = Math.sqrt(1 - sphi * sphi);
-        sphi1 = sphi + wl / d * Math.sin(theta);
+        cphi = Math.cos(phi);
+        sphi1 = getDiffAngleSin(phi, wl);
         cphi1 = Math.sqrt(1 - sphi1 * sphi1);
         qplus = 2 * q * cphi / (cphi + cphi1);
         qminus = 2 * q * cphi1 / (cphi + cphi1);
@@ -226,7 +237,7 @@ public class XrayCrystall {
      */
     public double getBraggIReflectivity(double phi, double wl) {
         Complex r = getBraggReflectivity(phi, wl);
-        return r.conjugate().multiply(r).getReal() * cphi1 / cphi;
+        return r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
     }
 
     /**
@@ -238,14 +249,14 @@ public class XrayCrystall {
      */
     public Complex getBraggTransmitivity(double phi, double wl) {
         Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq, rec;
-        double qplus, qminus, rq, q, k2;
+        double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
         B = f.multiply(COEF * wl * wl * den / M);
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
-        cphi = Math.sqrt(1 - sphi * sphi);
-        sphi1 = sphi + wl / d * Math.sin(theta);
+        cphi = Math.cos(phi);
+        sphi1 = getDiffAngleSin(phi, wl);
         cphi1 = Math.sqrt(1 - sphi1 * sphi1);
         qplus = 2 * q * cphi / (cphi + cphi1);
         qminus = 2 * q * cphi1 / (cphi + cphi1);
@@ -269,16 +280,42 @@ public class XrayCrystall {
         rec = K1.multiply(K2).reciprocal();
         return Complex.ONE.subtract(rec).multiply(ex1).divide(ex.subtract(rec));
     }
-    
-     /**
-     * Returning the intensity Bragg transmitivity coefficient
+
+    /**
+     * Returning the intensity Bragg transmittivity coefficient
      *
      * @param phi
      * @param wl
      * @return
      */
-    public double getBraggITransmitivity(double phi, double wl) {
+    public double getBraggITransmittivity(double phi, double wl) {
         Complex t = getBraggTransmitivity(phi, wl);
         return t.conjugate().multiply(t).getReal();
+    }
+
+    /**
+     * Returning the width of the Bragg reflection band in wavelength units
+     *
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getWavelengthWidth(double phi, double wl) {
+        Complex B = f.multiply(COEF * wl * wl * den / M);
+        double c = Math.pow(2 * d / wl, 2);
+        double sn = Math.sin(theta);
+        return c * B.abs() * wl / Math.sqrt(1 - c * Math.pow(sn, 2))
+                * (Math.cos(theta) - Math.sqrt(c - 1) * sn);
+    }
+
+    /**
+     * Returning the width of the Bragg reflection band in angle units
+     *
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getAngleWidth(double phi, double wl) {
+        return getWavelengthWidth(phi, wl) / wl / Math.sqrt(Math.pow(2 * d / wl, 2));
     }
 }
