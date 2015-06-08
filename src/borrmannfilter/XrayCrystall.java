@@ -241,13 +241,13 @@ public class XrayCrystall {
     }
 
     /**
-     * Returning the amplitude Bragg transmitivity coefficient
+     * Returning the amplitude Bragg transmittivity coefficient
      *
      * @param phi incidence angle
      * @param wl wavelength
      * @return
      */
-    public Complex getBraggTransmitivity(double phi, double wl) {
+    public Complex getBraggTransmittivity(double phi, double wl) {
         Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq, rec;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
         B = f.multiply(COEF * wl * wl * den / M);
@@ -289,7 +289,7 @@ public class XrayCrystall {
      * @return
      */
     public double getBraggITransmittivity(double phi, double wl) {
-        Complex t = getBraggTransmitivity(phi, wl);
+        Complex t = getBraggTransmittivity(phi, wl);
         return t.conjugate().multiply(t).getReal();
     }
 
@@ -317,5 +317,104 @@ public class XrayCrystall {
      */
     public double getAngleWidth(double phi, double wl) {
         return getWavelengthWidth(phi, wl) / wl / Math.sqrt(Math.pow(2 * d / wl, 2));
+    }
+
+    /**
+     * Returning the amplitude Laue reflectivity coefficient
+     *
+     * @param phi incidence angle
+     * @param wl wavelength
+     * @return
+     */
+    public Complex getLaueReflectivity(double phi, double wl) {
+        Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
+        double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        k2 = Math.pow(2 * Math.PI / wl, 2);
+        q = Math.PI / d * Math.cos(theta);
+        sphi = Math.sin(phi);
+        cphi = Math.cos(phi);
+        sphi1 = getDiffAngleSin(phi, wl);
+        cphi1 = -Math.sqrt(1 - sphi1 * sphi1);
+        qplus = 2 * q * cphi / (cphi + cphi1);
+        qminus = 2 * q * cphi1 / (cphi + cphi1);
+        rq = Math.sqrt(-qplus / qminus);
+        omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
+        omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
+        g = omega1.add(omega2).multiply(Math.sqrt(-qplus * qminus) / k2).divide(B);
+        sq = Complex.ONE.add(g.pow(2)).sqrt();
+        R0 = sq.add(g);
+        K2 = R0.multiply(-rq);
+        K1 = R0.divide(rq);
+        ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
+        ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
+                subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
+        if (ex.isNaN()) {
+            return K2;
+        }
+        return ex.subtract(1).divide(K1.multiply(K2).subtract(1)).multiply(ex1).multiply(K2);
+    }
+    
+    /**
+     * Returning the intensity Laue reflectivity coefficient
+     *
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getLaueIReflectivity(double phi, double wl) {
+        Complex r = getLaueReflectivity(phi, wl);
+        return -r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
+    }
+    
+    /**
+     * Returning the amplitude Laue transmittivity coefficient
+     *
+     * @param phi incidence angle
+     * @param wl wavelength
+     * @return
+     */
+    public Complex getLaueTransmittivity(double phi, double wl) {
+        Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
+        double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        k2 = Math.pow(2 * Math.PI / wl, 2);
+        q = Math.PI / d * Math.cos(theta);
+        sphi = Math.sin(phi);
+        cphi = Math.cos(phi);
+        sphi1 = getDiffAngleSin(phi, wl);
+        cphi1 = -Math.sqrt(1 - sphi1 * sphi1);
+        qplus = 2 * q * cphi / (cphi + cphi1);
+        qminus = 2 * q * cphi1 / (cphi + cphi1);
+        rq = Math.sqrt(-qplus / qminus);
+        omega1 = eps0.subtract(sphi * sphi).multiply(k2 / qplus / 2).subtract(qplus / 2);
+        omega2 = eps0.subtract(sphi1 * sphi1).multiply(k2 / qminus / 2).subtract(qminus / 2);
+        g = omega1.add(omega2).multiply(Math.sqrt(-qplus * qminus) / k2).divide(B);
+        sq = Complex.ONE.add(g.pow(2)).sqrt();
+        R0 = sq.add(g);
+        K2 = R0.multiply(-rq);
+        K1 = R0.divide(rq);
+        ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
+        ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
+                subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
+        if (ex.isNaN()) {
+            return K2;
+        }
+        K1K2=K1.multiply(K2);
+        return ex.multiply(K1K2).subtract(1).divide(K1K2.subtract(1)).multiply(ex1).multiply(K1K2);
+    }
+    
+    /**
+     * Returning the intensity Laue transmittivity coefficient
+     *
+     * @param phi
+     * @param wl
+     * @return
+     */
+    public double getLaueITransmittivity(double phi, double wl) {
+        Complex t = getLaueTransmittivity(phi, wl);
+        return t.conjugate().multiply(t).getReal();
     }
 }
