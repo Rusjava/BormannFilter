@@ -105,7 +105,7 @@ public class FXMLDocumentController implements Initializable {
         f2Field.textProperty().addListener(event -> crystal.setF2(testValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(testValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
         denField.textProperty().addListener(event -> crystal.setDen(testValueWithMemory(0, 30, denField, "2", valueMemory) * 1e3));
-        cutField.textProperty().addListener(event -> crystal.setTheta(testValueWithMemory(0, 90, cutField, "0", valueMemory) * Math.PI / 180));
+        cutField.textProperty().addListener(event -> crystal.setTheta(testValueWithMemory(-90, 90, cutField, "0", valueMemory) * Math.PI / 180));
         thetaField.textProperty().addListener(event -> {
             if (isAngle.get()) {
                 angle = testValueWithMemory(0, 1000, thetaField, "60", valueMemory) * Math.PI / 180;
@@ -122,9 +122,9 @@ public class FXMLDocumentController implements Initializable {
                 -> ((String) enAngChoiceBox.getValue()).equals("Incidence angle, degree:"), enAngChoiceBox.valueProperty()));
         //Switching thetaField default value when switching between anergy and angle
         enAngChoiceBox.valueProperty().addListener(event -> {
-                thetaField.setText(defaultStringMap.get((String) enAngChoiceBox.getValue()));
-                valueMemory.remove(thetaField);
-            });
+            thetaField.setText(defaultStringMap.get((String) enAngChoiceBox.getValue()));
+            valueMemory.remove(thetaField);
+        });
     }
 
     @FXML
@@ -138,33 +138,51 @@ public class FXMLDocumentController implements Initializable {
         rSeries = new Series<>();
         tSeries = new Series<>();
         if (isAngle.get()) {
-            output.setText("Bragg diffraction. The first order. Energy dependence");
-            offset = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
+            offset = CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta());
             step = 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV;
+            if (Math.cos(angle + 2 * crystal.getTheta()) > 0) {
+                output.setText("Bragg diffraction. The first order. Energy dependence");
+            } else {
+                output.setText("Laue diffraction. The first order. Energy dependence");
+            }
         } else {
-            output.setText("Bragg diffraction. The first order. Angualar dependence");
             offset = (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI;
             step = 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI;
+            if (Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0) {
+                output.setText("Bragg diffraction. The first order. Angualar dependence");
+            } else {
+                output.setText("Laue diffraction. The first order. Angualar dependence");
+            }
         }
 
         /*
-        * Calculating the data
-        */
+         * Calculating the data
+         */
         for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
             iter = offset + i * step;
             if (isAngle.get()) {
-                R = crystal.getBraggIReflectivity(angle, CONV / iter);
-                T = crystal.getBraggITransmittivity(angle, CONV / iter);
+                if (Math.cos(angle + 2 * crystal.getTheta()) > 0) {
+                    R = crystal.getBraggIReflectivity(angle, CONV / iter);
+                    T = crystal.getBraggITransmittivity(angle, CONV / iter);
+                } else {
+                    R = crystal.getLaueIReflectivity(angle, CONV / iter);
+                    T = crystal.getLaueITransmittivity(angle, CONV / iter);
+                }
             } else {
-                R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy);
-                T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy);
+                if (Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0) {
+                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy);
+                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy);
+                } else {
+                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy);
+                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy);
+                }
             }
             rSeries.getData().add(new Data<>(iter, R));
             tSeries.getData().add(new Data<>(iter, T));
         }
         /*
-        * Adding the data to the chart
-        */
+         * Adding the data to the chart
+         */
         mainChart.getData().add(rSeries);
         mainChart.getData().get(0).setName("Reflectivity");
         mainChart.getData().add(tSeries);
@@ -188,30 +206,31 @@ public class FXMLDocumentController implements Initializable {
         ((NumberAxis) mainChart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
     }
     /*
-    * Metod that test the entered values for correctness and puts them into the memory
-    */
+     * Metod that test the entered values for correctness and puts them into the memory
+     */
+
     private static Double testValueWithMemory(double min, double max, TextField field,
             String str, Map<TextField, String> oldStrings) {
         Double value;
-        String oldStr=oldStrings.get(field);
-        String newStr=field.getText();
+        String oldStr = oldStrings.get(field);
+        String newStr = field.getText();
         if (newStr.length() == 0) {
             return 0.0;
         }
-        if (oldStr==null) {
-            oldStr=str;
+        if (oldStr == null) {
+            oldStr = str;
             oldStrings.put(field, str);
         }
         try {
-            value=Double.valueOf(newStr);
+            value = Double.valueOf(newStr);
         } catch (NumberFormatException e) {
             field.setText(oldStr);
-            value=Double.valueOf(oldStr);
+            value = Double.valueOf(oldStr);
             return value;
         }
-        if (value < min || value > max ) {
+        if (value < min || value > max) {
             field.setText(oldStr);
-            value=Double.valueOf(oldStr);
+            value = Double.valueOf(oldStr);
             return value;
         }
         oldStrings.replace(field, newStr);

@@ -304,8 +304,8 @@ public class XrayCrystal {
         Complex B = f.multiply(COEF * wl * wl * den / M);
         double c = Math.pow(2 * d / wl, 2);
         double sn = Math.sin(theta);
-        return c * B.abs() * wl / Math.sqrt(1 - c * Math.pow(sn, 2))
-                * (Math.cos(theta) - Math.sqrt(c - 1) * sn);
+        return c * B.abs() * wl / Math.sqrt(Math.abs(1 - c * Math.pow(sn, 2)))
+                * Math.abs(Math.cos(theta) - Math.sqrt(c - 1) * sn);
     }
 
     /**
@@ -327,7 +327,7 @@ public class XrayCrystal {
      * @return
      */
     public Complex getLaueReflectivity(double phi, double wl) {
-        Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
+        Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
         B = f.multiply(COEF * wl * wl * den / M);
         eps0 = B.add(1);
@@ -350,10 +350,14 @@ public class XrayCrystal {
         ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
         ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
                 subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
+        K1K2=K1.multiply(K2);
         if (ex.isNaN()) {
-            return K2;
+            return ex1.divide(K1K2.subtract(1)).multiply(K2).negate();
         }
-        return ex.subtract(1).divide(K1.multiply(K2).subtract(1)).multiply(ex1).multiply(K2);
+        if (ex1.isNaN()) {
+            return Complex.ZERO;
+        }
+        return ex.subtract(1).divide(K1K2.subtract(1)).multiply(K2).multiply(ex1);
     }
     
     /**
@@ -365,7 +369,7 @@ public class XrayCrystal {
      */
     public double getLaueIReflectivity(double phi, double wl) {
         Complex r = getLaueReflectivity(phi, wl);
-        return -r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
+        return r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
     }
     
     /**
@@ -399,11 +403,14 @@ public class XrayCrystal {
         ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
         ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
                 subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
-        if (ex.isNaN()) {
-            return K2;
-        }
         K1K2=K1.multiply(K2);
-        return ex.multiply(K1K2).subtract(1).divide(K1K2.subtract(1)).multiply(ex1).multiply(K1K2);
+        if (ex.isNaN()) {
+            return ex1.divide(K1K2.subtract(1)).negate();
+        }
+        if (ex1.isNaN()) {
+            return Complex.ZERO;
+        }   
+        return ex.multiply(K1K2).subtract(1).divide(K1K2.subtract(1)).multiply(ex1);
     }
     
     /**
