@@ -23,9 +23,15 @@
                     <MenuItem mnemonicParsing="false" onAction="#handleCloseMenuAction" text="Close" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Options">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleGraphParamMenuAction" text="Graph parameters" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Shadow">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleShadowParamMenuAction" text="Shadow parameters" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleFilterMenuAction" text="Filter..." />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

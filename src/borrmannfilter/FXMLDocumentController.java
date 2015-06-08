@@ -229,4 +229,16 @@ public class FXMLDocumentController implements Initializable {
                 "<html>Crystal diffraction calculations. <br>Version: 0.1 <br>Date: June 2015. <br>Author: Ruslan Feshchenko</html>",
                 "About Borrmann filter application", 1));
     }
+
+    @FXML
+    private void handleGraphParamMenuAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleShadowParamMenuAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleFilterMenuAction(ActionEvent event) {
+    }
 }
