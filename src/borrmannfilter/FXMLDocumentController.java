@@ -35,9 +35,19 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
+import javafx.stage.FileChooser;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Formatter;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -56,8 +66,9 @@ public class FXMLDocumentController implements Initializable {
     private int size = 401;
     private Map<String, String> defaultStringMap;
     private Map<TextField, String> valueMemory;
+    private File oldFile = null;
 
-    private double offset = 33000, angle, energy;
+    private double offset, angle, energy;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
 
@@ -127,9 +138,43 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
+    /*
+    * Saving the calculated graphs into a text file
+    */
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
-
+        //Using FX filechooser for file selection
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choose a file to save the graphs in");
+        fc.setInitialFileName("Graph_data.dat");
+        fc.setInitialDirectory(oldFile);
+        File file = fc.showSaveDialog(null);
+        /*
+        * If a file was chosen then proceed
+        */
+        if (file != null) {
+            /* 
+             * Storing the file's directory
+             */
+            oldFile = file.getParentFile();
+            /*
+            * Writting formatted graph data into the text file
+            */
+            Formatter fm;
+            try (PrintWriter pw = new PrintWriter(new FileWriter(file, false))) {
+                for (int i = 0; i < size; i++) {
+                    fm = new Formatter();
+                    fm.format("%f %f %f", (Double) mainChart.getData().get(0)
+                            .getData().get(i).getXValue(), (Double) mainChart.getData().get(0)
+                            .getData().get(i).getYValue(), (Double) mainChart.getData().get(1)
+                            .getData().get(i).getYValue());
+                    pw.println(fm);
+                }
+            } catch (IOException e) {
+                javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Error while writing to the file", "Error",
+                        JOptionPane.ERROR_MESSAGE));
+            }
+        }
     }
 
     private void updateGraph() {
