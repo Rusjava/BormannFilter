@@ -23,7 +23,7 @@ import org.apache.commons.math3.complex.*;
  * @author Ruslan Feshchenko
  * @version 0.1
  */
-public class XrayCrystall {
+public class XrayCrystal {
 
     private double d, den, theta, L, M;
     private Complex f;
@@ -33,7 +33,7 @@ public class XrayCrystall {
      */
     public final static double COEF = 6.02e23 * 2.81794e-15 / Math.PI;
 
-    public XrayCrystall() {
+    public XrayCrystal() {
         d = 1.92e-10;
         den = 2000;
         theta = 0;

@@ -61,7 +61,7 @@ public class FXMLDocumentController implements Initializable {
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
 
-    private XrayCrystall crystal;
+    private XrayCrystal crystal;
 
     private DoubleProperty scale;
     private BooleanProperty isAngle;
@@ -90,7 +90,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        crystal = new XrayCrystall();
+        crystal = new XrayCrystal();
         angle = Math.PI / 3;
         energy = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
         scale = new SimpleDoubleProperty(1);
