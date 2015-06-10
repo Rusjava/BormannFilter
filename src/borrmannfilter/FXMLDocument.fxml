@@ -20,7 +20,10 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleCloseMenuAction" text="Close" />
+                    <MenuItem mnemonicParsing="false" onAction="#handlePageSetupMenuAction" text="Page setup..." />
+                    <MenuItem mnemonicParsing="false" onAction="#handlePrintMenuAction" text="Print..." />
+                    <SeparatorMenuItem  />
+                    <MenuItem mnemonicParsing="false" onAction="#handleCloseMenuAction" text="Close" /> 
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Options">
@@ -124,7 +127,7 @@
                   <RowConstraints />
                </rowConstraints>
             </GridPane>
-            <BorderPane prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="370.0">
+            <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="370.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="BoxText" text="Graph description:" BorderPane.alignment="CENTER" />
                </top>
