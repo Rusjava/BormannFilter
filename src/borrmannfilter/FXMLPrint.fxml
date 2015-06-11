@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.*?>
+<?import javafx.collections.*?>
+
+<AnchorPane id="AnchorPane" minHeight="400.0" minWidth="600.0"  prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLPrintGraphController">
+    <stylesheets>
+        <URL value="@fxmlprintgraph.css"/>
+    </stylesheets>
+    <children>
+        <BorderPane prefHeight="400.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <center>
+                <LineChart BorderPane.alignment="CENTER">
+                    <xAxis>
+                        <NumberAxis side="BOTTOM" styleClass="axis"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT" />
+                    </yAxis>
+                </LineChart>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>
