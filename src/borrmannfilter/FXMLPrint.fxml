@@ -12,7 +12,7 @@
 <?import java.net.*?>
 <?import javafx.collections.*?>
 
-<AnchorPane id="AnchorPane" minHeight="400.0" minWidth="600.0"  prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLPrintGraphController">
+<AnchorPane id="AnchorPane" minHeight="400.0" minWidth="600.0"  prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@fxmlprintgraph.css"/>
     </stylesheets>

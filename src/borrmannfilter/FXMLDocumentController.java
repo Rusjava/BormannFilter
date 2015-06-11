@@ -105,7 +105,60 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        updateGraph();
+        double iter, R, T;
+        boolean isLaue;
+        rSeries = new Series<>();
+        tSeries = new Series<>();
+        if (isAngle.get()) {
+            offset = CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta());
+            step = 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV;
+            isLaue = Math.cos(angle + 2 * crystal.getTheta()) > 0;
+            if (isLaue) {
+                output.setText("Bragg diffraction. The first order. Energy dependence");
+            } else {
+                output.setText("Laue diffraction. The first order. Energy dependence");
+            }
+        } else {
+            offset = (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI;
+            step = 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI;
+            isLaue = Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0;
+            if (isLaue) {
+                output.setText("Bragg diffraction. The first order. Angualar dependence");
+            } else {
+                output.setText("Laue diffraction. The first order. Angualar dependence");
+            }
+        }
+
+        /*
+         * Calculating the data
+         */
+        for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
+            iter = offset + i * step;
+            if (isAngle.get()) {
+                if (isLaue) {
+                    R = crystal.getBraggIReflectivity(angle, CONV / iter);
+                    T = crystal.getBraggITransmittivity(angle, CONV / iter);
+                } else {
+                    R = crystal.getLaueIReflectivity(angle, CONV / iter);
+                    T = crystal.getLaueITransmittivity(angle, CONV / iter);
+                }
+            } else {
+                if (isLaue) {
+                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy);
+                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy);
+                } else {
+                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy);
+                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy);
+                }
+            }
+            rSeries.getData().add(new Data<>(iter, R));
+            tSeries.getData().add(new Data<>(iter, T));
+        }
+        /*
+         * Adding the data to the chart
+         */
+        String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
+        createLineChart(rSeries, tSeries, label, offset, step, mainChart);
     }
 
     @Override
@@ -195,82 +248,6 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-    private void updateGraph() {
-        double iter, R, T;
-        boolean isLaue;
-        mainChart.getData().clear();
-        rSeries = new Series<>();
-        tSeries = new Series<>();
-        if (isAngle.get()) {
-            offset = CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta());
-            step = 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV;
-            isLaue = Math.cos(angle + 2 * crystal.getTheta()) > 0;
-            if (isLaue) {
-                output.setText("Bragg diffraction. The first order. Energy dependence");
-            } else {
-                output.setText("Laue diffraction. The first order. Energy dependence");
-            }
-        } else {
-            offset = (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI;
-            step = 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI;
-            isLaue = Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0;
-            if (isLaue) {
-                output.setText("Bragg diffraction. The first order. Angualar dependence");
-            } else {
-                output.setText("Laue diffraction. The first order. Angualar dependence");
-            }
-        }
-
-        /*
-         * Calculating the data
-         */
-        for (int i = -(size - 1) / 2; i < (size + 1) / 2; i++) {
-            iter = offset + i * step;
-            if (isAngle.get()) {
-                if (isLaue) {
-                    R = crystal.getBraggIReflectivity(angle, CONV / iter);
-                    T = crystal.getBraggITransmittivity(angle, CONV / iter);
-                } else {
-                    R = crystal.getLaueIReflectivity(angle, CONV / iter);
-                    T = crystal.getLaueITransmittivity(angle, CONV / iter);
-                }
-            } else {
-                if (isLaue) {
-                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy);
-                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy);
-                } else {
-                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy);
-                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy);
-                }
-            }
-            rSeries.getData().add(new Data<>(iter, R));
-            tSeries.getData().add(new Data<>(iter, T));
-        }
-        /*
-         * Adding the data to the chart
-         */
-        mainChart.getData().add(rSeries);
-        mainChart.getData().get(0).setName("Reflectivity");
-        mainChart.getData().add(tSeries);
-        mainChart.getData().get(1).setName("Transmittivity");
-        mainChart.setCreateSymbols(false);
-        //Formatting X-axis
-        ((NumberAxis) mainChart.getXAxis()).setAutoRanging(false);
-        ((NumberAxis) mainChart.getXAxis()).setForceZeroInRange(false);
-        ((NumberAxis) mainChart.getXAxis()).setTickUnit(step * (size - 1) / 8);
-        if (isAngle.get()) {
-            ((NumberAxis) mainChart.getXAxis()).setLabel("Energy, eV");
-        } else {
-            ((NumberAxis) mainChart.getXAxis()).setLabel("Angle, degree");
-        }
-        ((NumberAxis) mainChart.getXAxis()).setUpperBound(offset + size * step / 2);
-        ((NumberAxis) mainChart.getXAxis()).setLowerBound(offset - (size - 1) * step / 2);
-        //Formatting Y-axis
-        ((NumberAxis) mainChart.getYAxis()).setTickUnit(0.2);
-        ((NumberAxis) mainChart.getYAxis()).setAutoRanging(false);
-        ((NumberAxis) mainChart.getYAxis()).setUpperBound(1);
-        ((NumberAxis) mainChart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
-    }
     /*
      * Metod that test the entered values for correctness and puts them into the memory
      */
@@ -337,6 +314,7 @@ public class FXMLDocumentController implements Initializable {
             if (layout != null) {
                 job.getJobSettings().setPageLayout(layout);
             }
+            
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             BorderPane pane = (BorderPane) root.getChildrenUnmodifiable().get(0);
             createLineChart(rSeries, tSeries, label, offset, step, (LineChart<?, ?>) pane.getCenter());
@@ -363,6 +341,7 @@ public class FXMLDocumentController implements Initializable {
      */
 
     private void createLineChart(Series rSeries, Series tSeries, String XLabel, double offset, double step, LineChart<?, ?> chart) {
+        chart.getData().clear();
         chart.getData().add(rSeries);
         chart.getData().get(0).setName("Reflectivity");
         chart.getData().add(tSeries);
