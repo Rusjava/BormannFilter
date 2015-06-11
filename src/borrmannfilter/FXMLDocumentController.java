@@ -45,12 +45,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Formatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.transform.Scale;
 
@@ -73,8 +67,6 @@ public class FXMLDocumentController implements Initializable {
     private Map<TextField, String> valueMemory;
     private File oldFile = null;
     private PageLayout layout = null;
-    
-    private Parent root = null;
 
     private double offset, angle, energy, step;
 
@@ -175,11 +167,7 @@ public class FXMLDocumentController implements Initializable {
         defaultStringMap.put("Energy, eV:", "6457.96");
         //Defining map for storing field values
         valueMemory = new HashMap<>();
-        try {
-                root = FXMLLoader.load(getClass().getResource("FXMLPrint.fxml"));
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
         f1Field.textProperty().addListener(event -> crystal.setF1(testValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(testValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(testValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
@@ -251,7 +239,6 @@ public class FXMLDocumentController implements Initializable {
     /*
      * Metod that test the entered values for correctness and puts them into the memory
      */
-
     private static Double testValueWithMemory(double min, double max, TextField field,
             String str, Map<TextField, String> oldStrings) {
         Double value;
@@ -314,12 +301,17 @@ public class FXMLDocumentController implements Initializable {
             if (layout != null) {
                 job.getJobSettings().setPageLayout(layout);
             }
-            
+
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
-            BorderPane pane = (BorderPane) root.getChildrenUnmodifiable().get(0);
-            createLineChart(rSeries, tSeries, label, offset, step, (LineChart<?, ?>) pane.getCenter());
-            boolean success = job.printPage(pane);
-            if (success) {
+            LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
+            chart.layout();
+            createLineChart(rSeries, tSeries, label, offset, step, chart);
+            /*double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
+             double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
+             chart.getTransforms().add(new Scale(scaleX, scaleY));*/
+            chart.setMaxWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
+            chart.setMaxHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
+            if (job.printPage(chart)) {
                 job.endJob();
             }
         }
