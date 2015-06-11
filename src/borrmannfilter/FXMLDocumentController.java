@@ -304,6 +304,8 @@ public class FXMLDocumentController implements Initializable {
 
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
+            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
+            chart.setMinHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
             chart.layout();
             createLineChart(rSeries, tSeries, label, offset, step, chart);
             /*double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
@@ -323,6 +325,9 @@ public class FXMLDocumentController implements Initializable {
          * Bringing up a dialog that allows to specify page layout settings for printing
          */
         PrinterJob job = PrinterJob.createPrinterJob();
+        if (layout != null) {
+                job.getJobSettings().setPageLayout(layout);
+            }
         if (job.showPageSetupDialog(null)) {
             layout = job.getJobSettings().getPageLayout();
             job.endJob();
