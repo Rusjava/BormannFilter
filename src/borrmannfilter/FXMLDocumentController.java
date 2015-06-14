@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Formatter;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -99,26 +100,28 @@ public class FXMLDocumentController implements Initializable {
     private void handleButtonAction(ActionEvent event) {
         double iter, R, T;
         boolean isLaue;
+        String graphTitle = " diffraction. The first order. ";
         rSeries = new Series<>();
         tSeries = new Series<>();
         if (isAngle.get()) {
             offset = CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta());
             step = 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV;
             isLaue = Math.cos(angle + 2 * crystal.getTheta()) > 0;
-            if (isLaue) {
-                output.setText("Bragg diffraction. The first order. Energy dependence");
-            } else {
-                output.setText("Laue diffraction. The first order. Energy dependence");
-            }
+            graphTitle = graphTitle + "Energy dependence";
+
         } else {
             offset = (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI;
             step = 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI;
             isLaue = Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0;
-            if (isLaue) {
-                output.setText("Bragg diffraction. The first order. Angualar dependence");
-            } else {
-                output.setText("Laue diffraction. The first order. Angualar dependence");
-            }
+            graphTitle = graphTitle + "Angualar dependence";
+        }
+        /*
+        Setting up graph title
+        */
+        if (isLaue) {
+            output.setText("Bragg" + graphTitle);
+        } else {
+            output.setText("Laue" + graphTitle);
         }
 
         /*
@@ -306,13 +309,14 @@ public class FXMLDocumentController implements Initializable {
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
             chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
             chart.setMinHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
-            chart.layout();
             createLineChart(rSeries, tSeries, label, offset, step, chart);
             /*double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
              double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
              chart.getTransforms().add(new Scale(scaleX, scaleY));*/
             chart.setMaxWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
             chart.setMaxHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
+            ((NumberAxis) chart.getXAxis()).setTickLabelFill(Color.BLACK);
+            chart.layout();
             if (job.printPage(chart)) {
                 job.endJob();
             }
@@ -326,8 +330,8 @@ public class FXMLDocumentController implements Initializable {
          */
         PrinterJob job = PrinterJob.createPrinterJob();
         if (layout != null) {
-                job.getJobSettings().setPageLayout(layout);
-            }
+            job.getJobSettings().setPageLayout(layout);
+        }
         if (job.showPageSetupDialog(null)) {
             layout = job.getJobSettings().getPageLayout();
             job.endJob();
