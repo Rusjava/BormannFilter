@@ -187,11 +187,11 @@ public class FXMLDocumentController implements Initializable {
         valueMemory = new HashMap<>();
         valueMemorySwing = new HashMap<>();
         //Defining Swing fields
-        maxNraysBox = new JTextField("100000");
+        maxNraysBox = new JTextField("401");
         isAutomatic = new JCheckBox("Automatic range selection");
         isAutomatic.setSelected(true);
         isAutomatic.addChangeListener(event -> {
-                    if (isAutomatic.isEnabled()) {
+                    if (isAutomatic.isSelected()) {
                         maxXValueJTextField.setEnabled(false);
                         minXValueJTextField.setEnabled(false);
                     } else {
@@ -294,18 +294,12 @@ public class FXMLDocumentController implements Initializable {
             "Max value", maxXValueJTextField
         };
         int[] option = new int[1];
-        
-        try {
-            invokeAndWait(() -> option[0] = JOptionPane.showConfirmDialog(null, message, "Graph parameters",
+         
+        invokeLater(() -> option[0] = JOptionPane.showConfirmDialog(null, message, "Graph parameters",
                     JOptionPane.OK_CANCEL_OPTION));
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         if (option[0] == JOptionPane.OK_OPTION) {
-            size = (int) Math.round(TestValueWithMemory(0, 100000, maxNraysBox, "100000", valueMemorySwing));
+            size = (int) Math.round(TestValueWithMemory(1, 10000, maxNraysBox, "401", valueMemorySwing));
             minXValue = (int) Math.round(TestValueWithMemory(0, 100000, minXValueJTextField, "6380", valueMemorySwing));
             maxXValue = (int) Math.round(TestValueWithMemory(0, 100000, maxXValueJTextField, "6420", valueMemorySwing));
         }
