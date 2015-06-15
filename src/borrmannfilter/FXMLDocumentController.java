@@ -49,6 +49,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import static TextUtilities.MyTextUtilities.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import static javax.swing.SwingUtilities.*;
 
 /**
  *
@@ -63,10 +69,18 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
-
+    
+    //Swing elements
+    JTextField maxNraysBox;
+    JTextField maxXValueJTextField;
+    JTextField minXValueJTextField;
+    JCheckBox isAutomatic;
+    //Graph parameters
     private int size = 401;
+    private double minXValue, maxXValue;
     private Map<String, String> defaultStringMap;
     private Map<TextField, String> valueMemory;
+    private Map<JTextField, String> valueMemorySwing;
     private File oldFile = null;
     private PageLayout layout = null;
 
@@ -117,8 +131,8 @@ public class FXMLDocumentController implements Initializable {
             graphTitle = graphTitle + "Angualar dependence";
         }
         /*
-        Setting up graph title
-        */
+         Setting up graph title
+         */
         if (isLaue) {
             output.setText("Bragg" + graphTitle);
         } else {
@@ -169,9 +183,28 @@ public class FXMLDocumentController implements Initializable {
         defaultStringMap = new HashMap<>();
         defaultStringMap.put("Incidence angle, degree:", "60");
         defaultStringMap.put("Energy, eV:", "6457.96");
-        //Defining map for storing field values
+        //Defining maps for storing field values
         valueMemory = new HashMap<>();
-
+        valueMemorySwing = new HashMap<>();
+        //Defining Swing fields
+        maxNraysBox = new JTextField("100000");
+        isAutomatic = new JCheckBox("Automatic range selection");
+        isAutomatic.setSelected(true);
+        isAutomatic.addChangeListener(event -> {
+                    if (isAutomatic.isEnabled()) {
+                        maxXValueJTextField.setEnabled(false);
+                        minXValueJTextField.setEnabled(false);
+                    } else {
+                        maxXValueJTextField.setEnabled(true);
+                        minXValueJTextField.setEnabled(true);
+                    }
+                }
+        );
+        maxXValueJTextField = new JTextField();
+        maxXValueJTextField.setEnabled(false);
+        minXValueJTextField = new JTextField();
+        minXValueJTextField.setEnabled(false);
+        
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(TestValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
@@ -234,7 +267,7 @@ public class FXMLDocumentController implements Initializable {
                 /*
                  * Using Swing's JOptionPane class to display simple message
                  */
-                javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Error while writing to the file", "Error",
+                invokeLater(() -> JOptionPane.showMessageDialog(null, "Error while writing to the file", "Error",
                         JOptionPane.ERROR_MESSAGE));
             }
         }
@@ -254,6 +287,28 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleGraphParamMenuAction(ActionEvent event) {
+        Object[] message = {
+            "Graph size", maxNraysBox,
+            isAutomatic,
+            "Min value", minXValueJTextField,
+            "Max value", maxXValueJTextField
+        };
+        int[] option = new int[1];
+        
+        try {
+            invokeAndWait(() -> option[0] = JOptionPane.showConfirmDialog(null, message, "Graph parameters",
+                    JOptionPane.OK_CANCEL_OPTION));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (option[0] == JOptionPane.OK_OPTION) {
+            size = (int) Math.round(TestValueWithMemory(0, 100000, maxNraysBox, "100000", valueMemorySwing));
+            minXValue = (int) Math.round(TestValueWithMemory(0, 100000, minXValueJTextField, "6380", valueMemorySwing));
+            maxXValue = (int) Math.round(TestValueWithMemory(0, 100000, maxXValueJTextField, "6420", valueMemorySwing));
+        }
     }
 
     @FXML
