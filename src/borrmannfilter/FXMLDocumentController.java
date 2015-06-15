@@ -69,15 +69,15 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
-    
+
     //Swing elements
-    JTextField maxNraysBox;
-    JTextField maxXValueJTextField;
-    JTextField minXValueJTextField;
+    JTextField graphSizeBox, maxEnergyValueBox, minEnergyValueBox,
+            maxAngleValueBox, minAngleValueBox;
     JCheckBox isAutomatic;
     //Graph parameters
     private int size = 401;
-    private double minXValue, maxXValue;
+    private double minEnergyValue = 6456, maxEnergyValue = 6460, 
+            maxAngleValue = 60.00 , minAngleValue = 59.99;
     private Map<String, String> defaultStringMap;
     private Map<TextField, String> valueMemory;
     private Map<JTextField, String> valueMemorySwing;
@@ -119,14 +119,22 @@ public class FXMLDocumentController implements Initializable {
         rSeries = new Series<>();
         tSeries = new Series<>();
         if (isAngle.get()) {
-            offset = CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta());
-            step = 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV;
+            offset = isAutomatic.isSelected()
+                    ? CONV / 2 / crystal.getD() / Math.cos(angle + crystal.getTheta())
+                    : (minEnergyValue + maxEnergyValue) / 2;
+            step = isAutomatic.isSelected()
+                    ? 5 * crystal.getWavelengthWidth(angle, CONV / offset) * scale.get() / (size - 1) * offset * offset / CONV
+                    : (maxEnergyValue - minEnergyValue) * scale.get() / (size - 1);
             isLaue = Math.cos(angle + 2 * crystal.getTheta()) > 0;
             graphTitle = graphTitle + "Energy dependence";
 
         } else {
-            offset = (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI;
-            step = 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI;
+            offset = isAutomatic.isSelected()
+                    ? (Math.acos(CONV / energy / 2 / crystal.getD()) - crystal.getTheta()) * 180 / Math.PI
+                    : (minAngleValue + maxAngleValue) / 2;
+            step = isAutomatic.isSelected()
+                    ? 5 * crystal.getAngleWidth(offset, CONV / energy) * scale.get() / (size - 1) * 180 / Math.PI
+                    : (maxAngleValue - minAngleValue) * scale.get() / (size - 1);
             isLaue = Math.cos(offset * Math.PI / 180 + 2 * crystal.getTheta()) > 0;
             graphTitle = graphTitle + "Angualar dependence";
         }
@@ -138,7 +146,6 @@ public class FXMLDocumentController implements Initializable {
         } else {
             output.setText("Laue" + graphTitle);
         }
-
         /*
          * Calculating the data
          */
@@ -187,24 +194,31 @@ public class FXMLDocumentController implements Initializable {
         valueMemory = new HashMap<>();
         valueMemorySwing = new HashMap<>();
         //Defining Swing fields
-        maxNraysBox = new JTextField("401");
+        graphSizeBox = new JTextField("401");
         isAutomatic = new JCheckBox("Automatic range selection");
         isAutomatic.setSelected(true);
         isAutomatic.addChangeListener(event -> {
-                    if (isAutomatic.isSelected()) {
-                        maxXValueJTextField.setEnabled(false);
-                        minXValueJTextField.setEnabled(false);
-                    } else {
-                        maxXValueJTextField.setEnabled(true);
-                        minXValueJTextField.setEnabled(true);
-                    }
-                }
-        );
-        maxXValueJTextField = new JTextField();
-        maxXValueJTextField.setEnabled(false);
-        minXValueJTextField = new JTextField();
-        minXValueJTextField.setEnabled(false);
-        
+            if (isAutomatic.isSelected()) {
+                maxEnergyValueBox.setEnabled(false);
+                minEnergyValueBox.setEnabled(false);
+                maxAngleValueBox.setEnabled(false);
+                minAngleValueBox.setEnabled(false);
+            } else {
+                maxEnergyValueBox.setEnabled(true);
+                minEnergyValueBox.setEnabled(true);
+                maxAngleValueBox.setEnabled(true);
+                minAngleValueBox.setEnabled(true);
+            }
+        });
+        maxEnergyValueBox = new JTextField("6460");
+        maxEnergyValueBox.setEnabled(false);
+        minEnergyValueBox = new JTextField("6456");
+        minEnergyValueBox.setEnabled(false);
+        maxAngleValueBox = new JTextField("60.00");
+        maxAngleValueBox.setEnabled(false);
+        minAngleValueBox = new JTextField("59.99");
+        minAngleValueBox.setEnabled(false);
+
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(TestValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
@@ -288,20 +302,31 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleGraphParamMenuAction(ActionEvent event) {
         Object[] message = {
-            "Graph size", maxNraysBox,
+            "Graph size", graphSizeBox,
             isAutomatic,
-            "Min value", minXValueJTextField,
-            "Max value", maxXValueJTextField
+            isAngle.get() ? "Min value, eV" : "Min value, degree", isAngle.get() ? minEnergyValueBox : minAngleValueBox,
+            isAngle.get() ? "Max value, eV" : "Max value, degree", isAngle.get() ? maxEnergyValueBox : maxAngleValueBox
         };
         int[] option = new int[1];
-         
-        invokeLater(() -> option[0] = JOptionPane.showConfirmDialog(null, message, "Graph parameters",
+
+        try {
+            invokeAndWait(() -> option[0] = JOptionPane.showConfirmDialog(null, message, "Graph parameters",
                     JOptionPane.OK_CANCEL_OPTION));
-        
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (option[0] == JOptionPane.OK_OPTION) {
-            size = (int) Math.round(TestValueWithMemory(1, 10000, maxNraysBox, "401", valueMemorySwing));
-            minXValue = (int) Math.round(TestValueWithMemory(0, 100000, minXValueJTextField, "6380", valueMemorySwing));
-            maxXValue = (int) Math.round(TestValueWithMemory(0, 100000, maxXValueJTextField, "6420", valueMemorySwing));
+            size = (int) Math.round(TestValueWithMemory(2, 10000, graphSizeBox, "401", valueMemorySwing));
+            if (isAngle.get()) {
+                minEnergyValue = TestValueWithMemory(0, 100000, minEnergyValueBox, "6456", valueMemorySwing);
+                maxEnergyValue = TestValueWithMemory(0, 100000, maxEnergyValueBox, "6460", valueMemorySwing);
+            } else {
+                minAngleValue = TestValueWithMemory(0, 90, minAngleValueBox, "59.99", valueMemorySwing);
+                maxAngleValue = TestValueWithMemory(0, 90, maxAngleValueBox, "60.00", valueMemorySwing);
+            }
         }
     }
 

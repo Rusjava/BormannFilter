@@ -29,14 +29,16 @@ import javafx.stage.Stage;
  * @version 0.1
  */
 public class BorrmannFilter extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Locale.setDefault(new Locale("en", "US"));
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));     
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         stage.setTitle("Borrmann filter application");
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> System.exit(0));
+        javax.swing.SwingUtilities.invokeLater(() -> {});
         stage.show();
     }
 
@@ -46,5 +48,5 @@ public class BorrmannFilter extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
