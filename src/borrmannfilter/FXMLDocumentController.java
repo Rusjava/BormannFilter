@@ -48,6 +48,7 @@ import java.util.Formatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import static TextUtilities.MyTextUtilities.*;
 
 /**
  *
@@ -171,20 +172,20 @@ public class FXMLDocumentController implements Initializable {
         //Defining map for storing field values
         valueMemory = new HashMap<>();
 
-        f1Field.textProperty().addListener(event -> crystal.setF1(testValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
-        f2Field.textProperty().addListener(event -> crystal.setF2(testValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
-        dField.textProperty().addListener(event -> crystal.setD(testValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
-        denField.textProperty().addListener(event -> crystal.setDen(testValueWithMemory(0, 30, denField, "2", valueMemory) * 1e3));
-        cutField.textProperty().addListener(event -> crystal.setTheta(testValueWithMemory(-90, 90, cutField, "0", valueMemory) * Math.PI / 180));
+        f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
+        f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
+        dField.textProperty().addListener(event -> crystal.setD(TestValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
+        denField.textProperty().addListener(event -> crystal.setDen(TestValueWithMemory(0, 30, denField, "2", valueMemory) * 1e3));
+        cutField.textProperty().addListener(event -> crystal.setTheta(TestValueWithMemory(-90, 90, cutField, "0", valueMemory) * Math.PI / 180));
         thetaField.textProperty().addListener(event -> {
             if (isAngle.get()) {
-                angle = testValueWithMemory(0, 1000, thetaField, "60", valueMemory) * Math.PI / 180;
+                angle = TestValueWithMemory(0, 1000, thetaField, "60", valueMemory) * Math.PI / 180;
             } else {
-                energy = testValueWithMemory(100, 100000, thetaField, "6457.96", valueMemory);
+                energy = TestValueWithMemory(100, 100000, thetaField, "6457.96", valueMemory);
             }
         });
-        LField.textProperty().addListener(event -> crystal.setL(testValueWithMemory(0, 1000, LField, "0.25", valueMemory) * 1e-3));
-        MField.textProperty().addListener(event -> crystal.setM(testValueWithMemory(1, 300, thetaField, "28.09", valueMemory) * 1e-3));
+        LField.textProperty().addListener(event -> crystal.setL(TestValueWithMemory(0, 1000, LField, "0.25", valueMemory) * 1e-3));
+        MField.textProperty().addListener(event -> crystal.setM(TestValueWithMemory(1, 300, thetaField, "28.09", valueMemory) * 1e-3));
         //Binding scale property to X-scale slider
         scale.bind(xScaleSlider.valueProperty());
         //Binging isAngle variable to enAngChoiceBox
@@ -237,37 +238,6 @@ public class FXMLDocumentController implements Initializable {
                         JOptionPane.ERROR_MESSAGE));
             }
         }
-    }
-
-    /*
-     * Metod that test the entered values for correctness and puts them into the memory
-     */
-    private static Double testValueWithMemory(double min, double max, TextField field,
-            String str, Map<TextField, String> oldStrings) {
-        Double value;
-        String oldStr = oldStrings.get(field);
-        String newStr = field.getText();
-        if (newStr.length() == 0) {
-            return 0.0;
-        }
-        if (oldStr == null) {
-            oldStr = str;
-            oldStrings.put(field, str);
-        }
-        try {
-            value = Double.valueOf(newStr);
-        } catch (NumberFormatException e) {
-            field.setText(oldStr);
-            value = Double.valueOf(oldStr);
-            return value;
-        }
-        if (value < min || value > max) {
-            field.setText(oldStr);
-            value = Double.valueOf(oldStr);
-            return value;
-        }
-        oldStrings.replace(field, newStr);
-        return value;
     }
 
     @FXML
