@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //JavaFX packages and classes
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -62,6 +64,7 @@ import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.BorderFactory;
+import javax.swing.border.TitledBorder;
 import static javax.swing.SwingUtilities.*;
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
@@ -80,7 +83,8 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
-
+    //Invisible Swing dialog
+    JDialog dialog;
     //Swing elements for graph parameters
     JTextField graphSizeBox, maxEnergyValueBox, minEnergyValueBox,
             maxAngleValueBox, minAngleValueBox;
@@ -212,36 +216,8 @@ public class FXMLDocumentController implements Initializable {
         //Defining maps for storing field values
         valueMemory = new HashMap<>();
         valueMemorySwing = new HashMap<>();
-        //Defining Swing fields
-        graphSizeBox = new JTextField("401");
-        isAutomatic = new JCheckBox("Automatic range selection");
-        isAutomatic.setSelected(true);
-        isAutomatic.addChangeListener(event -> {
-            if (isAutomatic.isSelected()) {
-                maxEnergyValueBox.setEnabled(false);
-                minEnergyValueBox.setEnabled(false);
-                maxAngleValueBox.setEnabled(false);
-                minAngleValueBox.setEnabled(false);
-            } else {
-                maxEnergyValueBox.setEnabled(true);
-                minEnergyValueBox.setEnabled(true);
-                maxAngleValueBox.setEnabled(true);
-                minAngleValueBox.setEnabled(true);
-            }
-        });
-        maxEnergyValueBox = new JTextField("6460");
-        maxEnergyValueBox.setEnabled(false);
-        minEnergyValueBox = new JTextField("6456");
-        minEnergyValueBox.setEnabled(false);
-        maxAngleValueBox = new JTextField("60.00");
-        maxAngleValueBox.setEnabled(false);
-        minAngleValueBox = new JTextField("59.99");
-        minAngleValueBox.setEnabled(false);
-        shadowMaxRayNumberBox = new JTextField("10000");
-        sPolButton = new JRadioButton("only s-polarization");
-        sPolButton.setSelected(true);
-        pPolButton = new JRadioButton("only p-polarization");
-        spPolButton = new JRadioButton("both s and p-polarization");
+        //Initializing Swing components
+        initSwingComponents();
 
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
@@ -305,7 +281,7 @@ public class FXMLDocumentController implements Initializable {
                 /*
                  * Using Swing's JOptionPane class to display simple message
                  */
-                invokeLater(() -> JOptionPane.showMessageDialog(null, "Error while writing to the file", "Error",
+                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "Error while writing to the file", "Error",
                         JOptionPane.ERROR_MESSAGE));
             }
         }
@@ -318,36 +294,43 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleAboutMenuAction(ActionEvent event) {
-        javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
+        javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(dialog,
                 "<html>Crystal diffraction calculations. <br>Version: 0.1 <br>Date: June 2015. <br>Author: Ruslan Feshchenko</html>",
                 "About Borrmann filter application", 1));
     }
 
     @FXML
     private void handleGraphParamMenuAction(ActionEvent event) {
-        Object[] message = {
+        /*
+         * Graph parameters: size, automatic range selection flag and min and max range values
+         */
+        final Object[] message = {
             "Graph size", graphSizeBox,
             isAutomatic,
             isAngle.get() ? "Min value, eV" : "Min value, degree", isAngle.get() ? minEnergyValueBox : minAngleValueBox,
             isAngle.get() ? "Max value, eV" : "Max value, degree", isAngle.get() ? maxEnergyValueBox : maxAngleValueBox
         };
 
-        invokeLater(() -> {
-            JDialog dialog = new JDialog();
-            dialog.setAlwaysOnTop(true);
-            int option = JOptionPane.showConfirmDialog(dialog, message, "Graph parameters",
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                size = (int) Math.round(TestValueWithMemory(2, 10000, graphSizeBox, "401", valueMemorySwing));
-                if (isAngle.get()) {
-                    minEnergyValue = TestValueWithMemory(0, 100000, minEnergyValueBox, "6456", valueMemorySwing);
-                    maxEnergyValue = TestValueWithMemory(0, 100000, maxEnergyValueBox, "6460", valueMemorySwing);
-                } else {
-                    minAngleValue = TestValueWithMemory(0, 90, minAngleValueBox, "59.99", valueMemorySwing);
-                    maxAngleValue = TestValueWithMemory(0, 90, maxAngleValueBox, "60.00", valueMemorySwing);
+        try {
+            invokeAndWait(() -> {
+                int option = JOptionPane.showConfirmDialog(dialog, message, "Graph parameters",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    size = (int) Math.round(TestValueWithMemory(2, 10000, graphSizeBox, "401", valueMemorySwing));
+                    if (isAngle.get()) {
+                        minEnergyValue = TestValueWithMemory(0, 100000, minEnergyValueBox, "6456", valueMemorySwing);
+                        maxEnergyValue = TestValueWithMemory(0, 100000, maxEnergyValueBox, "6460", valueMemorySwing);
+                    } else {
+                        minAngleValue = TestValueWithMemory(0, 90, minAngleValueBox, "59.99", valueMemorySwing);
+                        maxAngleValue = TestValueWithMemory(0, 90, maxAngleValueBox, "60.00", valueMemorySwing);
+                    }
                 }
-            }
-        });
+            });
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -355,70 +338,92 @@ public class FXMLDocumentController implements Initializable {
         /*
          * Parameters for shadow file filtering: max number of rays and affected polarization
          */
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Affected polarization"));
-        panel.add(sPolButton);
-        panel.add(pPolButton);
-        panel.add(spPolButton);
-        ButtonGroup bGroup = new ButtonGroup();
-        bGroup.add(sPolButton);
-        bGroup.add(pPolButton);
-        bGroup.add(spPolButton);
-        Object[] message = {
-            "Maximum ray number", shadowMaxRayNumberBox,
-            panel
-        };
-
-        invokeLater(() -> {
-            JDialog dialog = new JDialog();
-            dialog.setAlwaysOnTop(true);
-            int option = JOptionPane.showConfirmDialog(dialog, message, "Shadow parameters",
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                maxRayNumber = (int) Math.round(TestValueWithMemory(1, 1000000, shadowMaxRayNumberBox, "10000", valueMemorySwing));
-                if (sPolButton.isSelected() || spPolButton.isSelected()) {
-                    sPol = true;
+        try {
+            invokeAndWait(() -> {
+                JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+                panel.add(sPolButton);
+                panel.add(pPolButton);
+                panel.add(spPolButton);
+                JPanel outerPanel = new JPanel();
+                outerPanel.setBorder(BorderFactory.createTitledBorder(null,
+                        "Affected polarization", TitledBorder.LEFT, TitledBorder.ABOVE_TOP));
+                outerPanel.add(panel);
+                ButtonGroup bGroup = new ButtonGroup();
+                bGroup.add(sPolButton);
+                bGroup.add(pPolButton);
+                bGroup.add(spPolButton);
+                Object[] message = {
+                    "Maximum ray number", shadowMaxRayNumberBox,
+                    outerPanel
+                };
+                int option = JOptionPane.showConfirmDialog(dialog, message, "Shadow parameters",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    maxRayNumber = (int) Math.round(TestValueWithMemory(1, 1000000, shadowMaxRayNumberBox, "10000", valueMemorySwing));
+                    if (sPolButton.isSelected() || spPolButton.isSelected()) {
+                        sPol = true;
+                    }
+                    if (pPolButton.isSelected() || spPolButton.isSelected()) {
+                        pPol = true;
+                    }
                 }
-                if (pPolButton.isSelected() || spPolButton.isSelected()) {
-                    pPol = true;
-                }
-            }
-        });
+            });
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
     private void handleFilterMenuAction(ActionEvent event) {
-        int nrays;
-        double[] ray;
-        try (ShadowFiles shadowFileRead = new ShadowFiles(false, true, MAX_NCOL, maxRayNumber, rFile);
-                ShadowFiles shadowFileWrite = new ShadowFiles(true, true, shadowFileRead.getNcol(), shadowFileRead.getNrays(), wFile)) {
-            nrays = shadowFileRead.getNrays();
-            ray = new double[shadowFileRead.getNcol()];
-            rFile = shadowFileRead.getFile();
-            wFile = shadowFileWrite.getFile();
-            for (int i = 0; i < nrays; i++) {
-                shadowFileRead.read(ray);
-                shadowFileWrite.write(ray);
+        /*
+        * Filtering a ray set
+        */
+        invokeLater(()-> {
+            int nrays;
+            double[] ray;
+            try (ShadowFiles shadowFileRead = new ShadowFiles(false, true, MAX_NCOL, maxRayNumber, rFile);
+                    ShadowFiles shadowFileWrite = new ShadowFiles(true, true, shadowFileRead.getNcol(), shadowFileRead.getNrays(), wFile)) {
+                nrays = shadowFileRead.getNrays();
+                ray = new double[shadowFileRead.getNcol()];
+                rFile = shadowFileRead.getFile();
+                wFile = shadowFileWrite.getFile();
+                double convCoef = 1;
+                for (int i = 0; i < nrays; i++) {
+                    shadowFileRead.read(ray);
+                    if (sPol) {
+                        ray[6] *= convCoef;
+                        ray[7] *= convCoef;
+                        ray[8] *= convCoef;
+                    }
+                    if (pPol) {
+                        ray[15] *= convCoef;
+                        ray[16] *= convCoef;
+                        ray[17] *= convCoef;
+                    }
+                    shadowFileWrite.write(ray);
+                }
+            } catch (EOFException e) {
+                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The end of file has been reached!", "Error",
+                        JOptionPane.ERROR_MESSAGE));
+            } catch (IOException e) {
+                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "I/O error during file conversion!", "Error",
+                        JOptionPane.ERROR_MESSAGE));
+            } catch (ShadowFiles.EndOfLineException e) {
+                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The number of columns is less than specified on line "
+                        + e.rayNumber + " !", "Error", JOptionPane.ERROR_MESSAGE));
+            } catch (ShadowFiles.FileIsCorruptedException e) {
+                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The file is corrupted! (line: "
+                        + e.rayNumber + ")", "Error", JOptionPane.ERROR_MESSAGE));
+            } catch (ShadowFiles.FileNotOpenedException e) {
+
+            } catch (InterruptedException ex) {
+
+            } catch (InvocationTargetException ex) {
+
             }
-        } catch (EOFException e) {
-            invokeLater(() -> JOptionPane.showMessageDialog(null, "The end of file has been reached!", "Error",
-                    JOptionPane.ERROR_MESSAGE));
-        } catch (IOException e) {
-            invokeLater(() -> JOptionPane.showMessageDialog(null, "I/O error during file conversion!", "Error",
-                    JOptionPane.ERROR_MESSAGE));
-        } catch (ShadowFiles.EndOfLineException e) {
-            invokeLater(() -> JOptionPane.showMessageDialog(null, "The number of columns is less than specified on line "
-                    + e.rayNumber + " !", "Error", JOptionPane.ERROR_MESSAGE));
-        } catch (ShadowFiles.FileIsCorruptedException e) {
-            invokeLater(() -> JOptionPane.showMessageDialog(null, "The file is corrupted! (line: "
-                    + e.rayNumber + ")", "Error", JOptionPane.ERROR_MESSAGE));
-        } catch (ShadowFiles.FileNotOpenedException e) {
-
-        } catch (InterruptedException ex) {
-
-        } catch (InvocationTargetException ex) {
-
-        }
+        });
     }
 
     @FXML
@@ -487,5 +492,39 @@ public class FXMLDocumentController implements Initializable {
         ((NumberAxis) chart.getYAxis()).setAutoRanging(false);
         ((NumberAxis) chart.getYAxis()).setUpperBound(1);
         ((NumberAxis) chart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
+    }
+
+    /*
+     * Initialization of Swing components on EDT
+     */
+    private void initSwingComponents() {
+        invokeLater(() -> {
+            dialog = new JDialog();
+            dialog.setAlwaysOnTop(true);
+            graphSizeBox = new JTextField("401");
+            isAutomatic = new JCheckBox("Automatic range selection");
+            maxEnergyValueBox = new JTextField("6460");
+            minEnergyValueBox = new JTextField("6456");
+            maxAngleValueBox = new JTextField("60.00");
+            maxAngleValueBox.setEnabled(false);
+            minAngleValueBox = new JTextField("59.99");
+            isAutomatic.addChangeListener(event -> {
+                maxEnergyValueBox.setEnabled(!isAutomatic.isSelected());
+                minEnergyValueBox.setEnabled(!isAutomatic.isSelected());
+                maxAngleValueBox.setEnabled(!isAutomatic.isSelected());
+                minAngleValueBox.setEnabled(!isAutomatic.isSelected());
+            });
+            isAutomatic.setSelected(true);
+
+            shadowMaxRayNumberBox = new JTextField("10000");
+            sPolButton = new JRadioButton("only s-polarization");
+            sPolButton.setSelected(true);
+            pPolButton = new JRadioButton("only p-polarization");
+            spPolButton = new JRadioButton("both s and p-polarization");
+        });
+    }
+
+    @FXML
+    private void handleHelpTopicsMenuAction(ActionEvent event) {
     }
 }
