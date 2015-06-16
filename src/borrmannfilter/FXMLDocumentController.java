@@ -17,7 +17,12 @@
 package borrmannfilter;
 
 import java.net.URL;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
+//JavaFX packages and classes
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,19 +41,20 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.print.*;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JOptionPane;
+//Java Input/Output packes and classes
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Formatter;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
-import static TextUtilities.MyTextUtilities.*;
+import java.io.EOFException;
+//Java AWT packages and classes
+import java.awt.GridLayout;
+//Java Swing packages and classes
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
@@ -56,10 +62,9 @@ import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.BorderFactory;
-import java.awt.GridLayout;
-import java.io.EOFException;
-import java.lang.reflect.InvocationTargetException;
 import static javax.swing.SwingUtilities.*;
+//My packages and classes
+import static TextUtilities.MyTextUtilities.*;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -350,9 +355,8 @@ public class FXMLDocumentController implements Initializable {
         /*
          * Parameters for shadow file filtering: max number of rays and affected polarization
          */
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Affected polarization"));
-        panel.setLayout(new GridLayout(3, 1));
         panel.add(sPolButton);
         panel.add(pPolButton);
         panel.add(spPolButton);
