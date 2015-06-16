@@ -38,7 +38,6 @@ public class BorrmannFilter extends Application {
         stage.setTitle("Borrmann filter application");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> System.exit(0));
-        javax.swing.SwingUtilities.invokeLater(() -> {});
         stage.show();
     }
 
