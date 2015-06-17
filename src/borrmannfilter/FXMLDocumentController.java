@@ -46,6 +46,11 @@ import javafx.stage.FileChooser;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import javafx.scene.image.*;
+import javafx.scene.SnapshotParameters;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
 import javafx.print.*;
 //Java Input/Output packes and classes
 import java.io.File;
@@ -83,15 +88,21 @@ public class FXMLDocumentController implements Initializable {
     private TextField f1Field, f2Field, dField, denField, cutField;
     @FXML
     private Button button;
+    /*
+    * Swing components declarations
+    */
     //Invisible Swing dialog
     JDialog dialog;
-    //Swing elements for graph parameters
+    //Swing components for graph parameters
     JTextField graphSizeBox, maxEnergyValueBox, minEnergyValueBox,
             maxAngleValueBox, minAngleValueBox;
     JCheckBox isAutomatic;
-    //Swing elements for Shadow parameters
+    //Swing components for Shadow parameters
     JTextField shadowMaxRayNumberBox;
     JRadioButton sPolButton, pPolButton, spPolButton;
+    /*
+    * End of Swing components declarations
+    */
     //Graph parameters
     private int size = 401, maxRayNumber = 10000;
     private boolean sPol = true, pPol = false;
@@ -218,7 +229,14 @@ public class FXMLDocumentController implements Initializable {
         valueMemorySwing = new HashMap<>();
         //Initializing Swing components
         initSwingComponents();
-
+        
+        //Creating default layout
+        PrinterJob job = PrinterJob.createPrinterJob();
+        layout = job.getPrinter().createPageLayout(Paper.A4, PageOrientation.PORTRAIT, 
+                    job.getJobSettings().getPageLayout().getLeftMargin(),  job.getJobSettings().getPageLayout().getRightMargin(),
+                    job.getJobSettings().getPageLayout().getTopMargin(),  job.getJobSettings().getPageLayout().getBottomMargin()
+            );
+        
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(TestValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
@@ -326,9 +344,7 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             });
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -368,9 +384,7 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             });
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -418,9 +432,7 @@ public class FXMLDocumentController implements Initializable {
                         + e.rayNumber + ")", "Error", JOptionPane.ERROR_MESSAGE));
             } catch (ShadowFiles.FileNotOpenedException e) {
 
-            } catch (InterruptedException ex) {
-
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
 
             }
         });
@@ -432,23 +444,22 @@ public class FXMLDocumentController implements Initializable {
          * Bringing up printer setup dialog and intitiate printing of the graph
          */
         PrinterJob job = PrinterJob.createPrinterJob();
+        job.getJobSettings().setPageLayout(layout);
+   
         if (job.showPrintDialog(null)) {
-            if (layout != null) {
-                job.getJobSettings().setPageLayout(layout);
-            }
-
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
-            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
-            chart.setMinHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
+            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());      
             createLineChart(rSeries, tSeries, label, offset, step, chart);
-            /*double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
-             double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
-             chart.getTransforms().add(new Scale(scaleX, scaleY));*/
+            /*
+            double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
+            double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
+            chart.getTransforms().add(new Scale(scaleX, scaleY));
+            */
             chart.setMaxWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
             chart.setMaxHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
-            ((NumberAxis) chart.getXAxis()).setTickLabelFill(Color.BLACK);
-            chart.layout();
+            chart.setAnimated(false);
+            chart.layout();   
             if (job.printPage(chart)) {
                 job.endJob();
             }
@@ -461,9 +472,7 @@ public class FXMLDocumentController implements Initializable {
          * Bringing up a dialog that allows to specify page layout settings for printing
          */
         PrinterJob job = PrinterJob.createPrinterJob();
-        if (layout != null) {
-            job.getJobSettings().setPageLayout(layout);
-        }
+        job.getJobSettings().setPageLayout(layout);
         if (job.showPageSetupDialog(null)) {
             layout = job.getJobSettings().getPageLayout();
             job.endJob();
@@ -526,5 +535,21 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleHelpTopicsMenuAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleSaveImageMenuAction(ActionEvent event) {
+        int width = 800, height = 600;
+        String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
+        LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());  
+        chart.setAnimated(false);
+        createLineChart(rSeries, tSeries, label, offset, step, chart);
+        chart.setPrefSize(width, height);
+        chart.layout();   
+        WritableImage image = new WritableImage(width, height);
+        (new Scene(chart)).snapshot(image);
+        Stage stage = new Stage();
+        stage.setScene(new Scene(new FlowPane(new ImageView(image))));
+        stage.show();
     }
 }
