@@ -320,7 +320,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleGraphParamMenuAction(ActionEvent event) {
         /*
-         * Graph parameters: size, automatic range selection flag and min and max range values
+         * Graph parameters: xsize, automatic range selection flag and min and max range values
          */
         final Object[] message = {
             "Graph size", graphSizeBox,
@@ -483,6 +483,7 @@ public class FXMLDocumentController implements Initializable {
      */
 
     private void createLineChart(Series rSeries, Series tSeries, String XLabel, double offset, double step, LineChart<?, ?> chart) {
+        int xsize = rSeries.getData().size();
         chart.getData().clear();
         chart.getData().add(rSeries);
         chart.getData().get(0).setName("Reflectivity");
@@ -492,10 +493,10 @@ public class FXMLDocumentController implements Initializable {
         //Formatting X-axis
         ((NumberAxis) chart.getXAxis()).setAutoRanging(false);
         ((NumberAxis) chart.getXAxis()).setForceZeroInRange(false);
-        ((NumberAxis) chart.getXAxis()).setTickUnit(step * (size - 1) / 8);
+        ((NumberAxis) chart.getXAxis()).setTickUnit(step * (xsize - 1) / 8);
         ((NumberAxis) chart.getXAxis()).setLabel(XLabel);
-        ((NumberAxis) chart.getXAxis()).setUpperBound(offset + size * step / 2);
-        ((NumberAxis) chart.getXAxis()).setLowerBound(offset - (size - 1) * step / 2);
+        ((NumberAxis) chart.getXAxis()).setUpperBound(offset + xsize * step / 2);
+        ((NumberAxis) chart.getXAxis()).setLowerBound(offset - (xsize - 1) * step / 2);
         //Formatting Y-axis
         ((NumberAxis) chart.getYAxis()).setTickUnit(0.2);
         ((NumberAxis) chart.getYAxis()).setAutoRanging(false);
