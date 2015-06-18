@@ -45,6 +45,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
 import static javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.scene.image.*;
@@ -537,6 +538,14 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleHelpTopicsMenuAction(ActionEvent event) {
+        WebView webView = new WebView();
+        webView.getEngine()
+                .load("C:\\Java\\Projects\\BorrmannFilter\\src\\borrmannfilter\\Help.html");
+        
+        Stage stage = new Stage();
+        stage.setTitle("Borrmann application help topics");
+        stage.setScene(new Scene(webView));
+        stage.show();
     }
 
     @FXML
