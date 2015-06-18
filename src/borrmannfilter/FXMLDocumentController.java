@@ -403,19 +403,9 @@ public class FXMLDocumentController implements Initializable {
                 ray = new double[shadowFileRead.getNcol()];
                 rFile = shadowFileRead.getFile();
                 wFile = shadowFileWrite.getFile();
-                double convCoef = 1;
                 for (int i = 0; i < nrays; i++) {
                     shadowFileRead.read(ray);
-                    if (sPol) {
-                        ray[6] *= convCoef;
-                        ray[7] *= convCoef;
-                        ray[8] *= convCoef;
-                    }
-                    if (pPol) {
-                        ray[15] *= convCoef;
-                        ray[16] *= convCoef;
-                        ray[17] *= convCoef;
-                    }
+                    ray = crystal.rayConversion(ray, sPol, pPol);
                     shadowFileWrite.write(ray);
                 }
             } catch (EOFException e) {

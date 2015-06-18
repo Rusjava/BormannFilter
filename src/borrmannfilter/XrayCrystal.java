@@ -424,4 +424,15 @@ public class XrayCrystal {
         Complex t = getLaueTransmittivity(phi, wl);
         return t.conjugate().multiply(t).getReal();
     }
+    
+    /**
+     * Return Shadow rays modified by passing through the crystal
+     * @param oldRay
+     * @param sPol modify s-polarization
+     * @param pPol modify p-polarization
+     * @return
+     */
+    public double[] rayConversion (double [] oldRay, Boolean sPol, Boolean pPol) {
+        return oldRay;
+    }
 }
