@@ -417,17 +417,17 @@ public class FXMLDocumentController implements Initializable {
                     shadowFileWrite.write(ray);
                 }
             } catch (EOFException e) {
-                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The end of file has been reached!", "Error",
-                        JOptionPane.ERROR_MESSAGE));
+                JOptionPane.showMessageDialog(dialog, "The end of file has been reached!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             } catch (IOException e) {
-                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "I/O error during file conversion!", "Error",
-                        JOptionPane.ERROR_MESSAGE));
+                JOptionPane.showMessageDialog(dialog, "I/O error during file conversion!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             } catch (ShadowFiles.EndOfLineException e) {
-                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The number of columns is less than specified on line "
-                        + e.rayNumber + " !", "Error", JOptionPane.ERROR_MESSAGE));
+                JOptionPane.showMessageDialog(dialog, "The number of columns is less than specified on line "
+                        + e.rayNumber + " !", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ShadowFiles.FileIsCorruptedException e) {
-                invokeLater(() -> JOptionPane.showMessageDialog(dialog, "The file is corrupted! (line: "
-                        + e.rayNumber + ")", "Error", JOptionPane.ERROR_MESSAGE));
+                JOptionPane.showMessageDialog(dialog, "The file is corrupted! (line: "
+                        + e.rayNumber + ")", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ShadowFiles.FileNotOpenedException e) {
 
             } catch (InterruptedException | InvocationTargetException ex) {
@@ -461,6 +461,9 @@ public class FXMLDocumentController implements Initializable {
             if (job.printPage(chart)) {
                 job.endJob();
             }
+            /*Stage stage = new Stage();
+            stage.setScene(new Scene(new FlowPane(new ImageView(image))));
+            stage.show();*/
         }
     }
 
@@ -537,7 +540,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void handleSaveImageMenuAction(ActionEvent event) throws IOException {
+    private void handleSaveImageMenuAction(ActionEvent event) {
         /*
          * Saving chart as image
          */
@@ -550,13 +553,17 @@ public class FXMLDocumentController implements Initializable {
         fc.setInitialFileName("x-ray diffraction chart.png");
         fc.setInitialDirectory(iFile);
         //File extensions
-        fc.setSelectedExtensionFilter(new ExtensionFilter("PNG image", "png"));
+        fc.getExtensionFilters().add(new ExtensionFilter("PNG image", "*.png"));
+        fc.getExtensionFilters().add(new ExtensionFilter("JPG image", "*.jpg"));
+        fc.getExtensionFilters().add(new ExtensionFilter("TIF image", "*.tif"));
+        fc.getExtensionFilters().add(new ExtensionFilter("GIF image", "*.gif"));
         File file = fc.showSaveDialog(null);
         /*
          * If a file was chosen then proceed
          */
         if (file != null) {
             iFile = file.getParentFile();
+            String selectedExtension = fc.getSelectedExtensionFilter().getExtensions().get(0).substring(2);
             //Creating chart
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
@@ -567,15 +574,18 @@ public class FXMLDocumentController implements Initializable {
             //Capturing image
             WritableImage image = new WritableImage(iWidth, iHeight);
             (new Scene(chart)).snapshot(image);
-            BufferedImage bImage = new BufferedImage(iWidth, iHeight, BufferedImage.TYPE_INT_RGB);
-            SwingFXUtils.fromFXImage(image, bImage);
-            ImageIO.write(bImage, "png", file);
-            
+            //Creating BufferedImage
+            invokeLater (() -> {
+                BufferedImage bImage = new BufferedImage(iWidth, iHeight, BufferedImage.TYPE_INT_ARGB);
+                SwingFXUtils.fromFXImage(image, bImage);
+                //Writing image into a file  
+                try {
+                    ImageIO.write(bImage, selectedExtension, file);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(dialog, "I/O error during image file creation!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }   
+            });
         }
-
-        //Writing image into a file
-        /*Stage stage = new Stage();
-         stage.setScene(new Scene(new FlowPane(new ImageView(image))));
-         stage.show();*/
     }
 }
