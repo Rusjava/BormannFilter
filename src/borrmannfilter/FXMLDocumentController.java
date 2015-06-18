@@ -43,11 +43,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
+import static javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.scene.image.*;
-import javafx.scene.SnapshotParameters;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
@@ -60,6 +61,7 @@ import java.io.PrintWriter;
 import java.io.EOFException;
 //Java AWT packages and classes
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 //Java Swing packages and classes
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -71,6 +73,8 @@ import javax.swing.JDialog;
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
 import static javax.swing.SwingUtilities.*;
+import javax.imageio.ImageIO;
+
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
 import shadowfileconverter.ShadowFiles;
@@ -89,8 +93,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button button;
     /*
-    * Swing components declarations
-    */
+     * Swing components declarations
+     */
     //Invisible Swing dialog
     JDialog dialog;
     //Swing components for graph parameters
@@ -101,24 +105,29 @@ public class FXMLDocumentController implements Initializable {
     JTextField shadowMaxRayNumberBox;
     JRadioButton sPolButton, pPolButton, spPolButton;
     /*
-    * End of Swing components declarations
-    */
+     * End of Swing components declarations
+     */
     //Graph parameters
-    private int size = 401, maxRayNumber = 10000;
+    private int size = 401;
+    private File oldFile = null;
     private boolean sPol = true, pPol = false;
     private double minEnergyValue = 6456, maxEnergyValue = 6460,
             maxAngleValue = 60.00, minAngleValue = 59.99;
+    private double offset, angle, energy, step;
+    private Series<Number, Number> rSeries = null, tSeries = null;
+
     private Map<String, String> defaultStringMap;
     private Map<TextField, String> valueMemory;
     private Map<JTextField, String> valueMemorySwing;
     //Shadow parameters
-    private File oldFile = null;
-    private PageLayout layout = null;
     private final int MAX_NCOL = 18;
-
-    File rFile = null, wFile = null;
-
-    private double offset, angle, energy, step;
+    private int maxRayNumber = 10000;
+    private File wFile = null, rFile = null;
+    //Printing parameters
+    private PageLayout layout = null;
+    //Image parameters
+    private File iFile = null;
+    private int iWidth = 600, iHeight = 400;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
 
@@ -127,7 +136,6 @@ public class FXMLDocumentController implements Initializable {
     private DoubleProperty scale;
     private BooleanProperty isAngle;
 
-    private Series<Number, Number> rSeries, tSeries;
     @FXML
     private LineChart<Number, Number> mainChart;
     @FXML
@@ -229,14 +237,14 @@ public class FXMLDocumentController implements Initializable {
         valueMemorySwing = new HashMap<>();
         //Initializing Swing components
         initSwingComponents();
-        
+
         //Creating default layout
         PrinterJob job = PrinterJob.createPrinterJob();
-        layout = job.getPrinter().createPageLayout(Paper.A4, PageOrientation.PORTRAIT, 
-                    job.getJobSettings().getPageLayout().getLeftMargin(),  job.getJobSettings().getPageLayout().getRightMargin(),
-                    job.getJobSettings().getPageLayout().getTopMargin(),  job.getJobSettings().getPageLayout().getBottomMargin()
-            );
-        
+        layout = job.getPrinter().createPageLayout(Paper.A4, PageOrientation.PORTRAIT,
+                job.getJobSettings().getPageLayout().getLeftMargin(), job.getJobSettings().getPageLayout().getRightMargin(),
+                job.getJobSettings().getPageLayout().getTopMargin(), job.getJobSettings().getPageLayout().getBottomMargin()
+        );
+
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
         dField.textProperty().addListener(event -> crystal.setD(TestValueWithMemory(0, 2, dField, "0.192", valueMemory) * 1e-9));
@@ -392,9 +400,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleFilterMenuAction(ActionEvent event) {
         /*
-        * Filtering a ray set
-        */
-        invokeLater(()-> {
+         * Filtering a ray set
+         */
+        invokeLater(() -> {
             int nrays;
             double[] ray;
             try (ShadowFiles shadowFileRead = new ShadowFiles(false, true, MAX_NCOL, maxRayNumber, rFile);
@@ -435,21 +443,21 @@ public class FXMLDocumentController implements Initializable {
          */
         PrinterJob job = PrinterJob.createPrinterJob();
         job.getJobSettings().setPageLayout(layout);
-   
+
         if (job.showPrintDialog(null)) {
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
-            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());      
+            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
             createLineChart(rSeries, tSeries, label, offset, step, chart);
             /*
-            double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
-            double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
-            chart.getTransforms().add(new Scale(scaleX, scaleY));
-            */
+             double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
+             double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
+             chart.getTransforms().add(new Scale(scaleX, scaleY));
+             */
             chart.setMaxWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
             chart.setMaxHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
             chart.setAnimated(false);
-            chart.layout();   
+            chart.layout();
             if (job.printPage(chart)) {
                 job.endJob();
             }
@@ -529,18 +537,45 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void handleSaveImageMenuAction(ActionEvent event) {
-        int width = 800, height = 600;
-        String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
-        LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());  
-        chart.setAnimated(false);
-        createLineChart(rSeries, tSeries, label, offset, step, chart);
-        chart.setPrefSize(width, height);
-        chart.layout();   
-        WritableImage image = new WritableImage(width, height);
-        (new Scene(chart)).snapshot(image);
-        Stage stage = new Stage();
-        stage.setScene(new Scene(new FlowPane(new ImageView(image))));
-        stage.show();
+    private void handleSaveImageMenuAction(ActionEvent event) throws IOException {
+        /*
+         * Saving chart as image
+         */
+        if (rSeries == null) {
+            return;
+        }
+        //Selecting file to save the chrt image
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choose a file to save the image in");
+        fc.setInitialFileName("x-ray diffraction chart.png");
+        fc.setInitialDirectory(iFile);
+        //File extensions
+        fc.setSelectedExtensionFilter(new ExtensionFilter("PNG image", "png"));
+        File file = fc.showSaveDialog(null);
+        /*
+         * If a file was chosen then proceed
+         */
+        if (file != null) {
+            iFile = file.getParentFile();
+            //Creating chart
+            String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
+            LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
+            chart.setAnimated(false);
+            createLineChart(rSeries, tSeries, label, offset, step, chart);
+            chart.setPrefSize(iWidth, iHeight);
+            chart.layout();
+            //Capturing image
+            WritableImage image = new WritableImage(iWidth, iHeight);
+            (new Scene(chart)).snapshot(image);
+            BufferedImage bImage = new BufferedImage(iWidth, iHeight, BufferedImage.TYPE_INT_RGB);
+            SwingFXUtils.fromFXImage(image, bImage);
+            ImageIO.write(bImage, "png", file);
+            
+        }
+
+        //Writing image into a file
+        /*Stage stage = new Stage();
+         stage.setScene(new Scene(new FlowPane(new ImageView(image))));
+         stage.show();*/
     }
 }
