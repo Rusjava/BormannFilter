@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 /**
  *
  * @author Ruslan Feshchenko
- * @version 0.1
+ * @version 0.5
  */
 public class BorrmannFilter extends Application {
 

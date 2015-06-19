@@ -84,7 +84,7 @@ import shadowfileconverter.ShadowFiles;
 /**
  *
  * @author Ruslan Feshchenko
- * @version 0.1
+ * @version 0.5
  */
 public class FXMLDocumentController implements Initializable {
 

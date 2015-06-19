@@ -21,7 +21,7 @@ import org.apache.commons.math3.complex.*;
 /**
  *
  * @author Ruslan Feshchenko
- * @version 0.1
+ * @version 0.5
  */
 public class XrayCrystal {
 
