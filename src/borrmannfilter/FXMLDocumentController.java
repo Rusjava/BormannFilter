@@ -112,12 +112,11 @@ public class FXMLDocumentController implements Initializable {
     //Graph parameters
     private int size = 401;
     private File oldFile = null;
-    private boolean sPol = true, pPol = false;
     private double minEnergyValue = 6456, maxEnergyValue = 6460,
             maxAngleValue = 60.00, minAngleValue = 59.99;
     private double offset, angle, energy, step;
     private Series<Number, Number> rSeries = null, tSeries = null;
-
+    //Memory maps
     private Map<String, String> defaultStringMap;
     private Map<TextField, String> valueMemory;
     private Map<JTextField, String> valueMemorySwing;
@@ -125,19 +124,21 @@ public class FXMLDocumentController implements Initializable {
     private final int MAX_NCOL = 18;
     private int maxRayNumber = 10000;
     private File wFile = null, rFile = null;
+    private boolean sPolShadow = true, pPolShadow = false;
     //Printing parameters
     private PageLayout layout = null;
     //Image parameters
     private File iFile = null;
-    private int iWidth = 600, iHeight = 400;
+    private int iWidth = 800, iHeight = 600;
+    private String workPath;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
 
     private XrayCrystal crystal;
-    String workPath;
-
+    //Observable properties
     private DoubleProperty scale;
     private BooleanProperty isAngle;
+    private BooleanProperty isSPol;
 
     @FXML
     private LineChart<Number, Number> mainChart;
@@ -155,12 +156,15 @@ public class FXMLDocumentController implements Initializable {
     private ChoiceBox<?> enAngChoiceBox;
     @FXML
     private BorderPane chartPane;
+    @FXML
+    private ChoiceBox<?> enPolChoiceBox;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
         double iter, R, T;
         boolean isLaue;
-        String graphTitle = " diffraction. The first order. ";
+        String graphTitle = " diffraction in the first order. "
+                + (isSPol.get() ? "S-polarization. " : "P-polarization. ");
         rSeries = new Series<>();
         tSeries = new Series<>();
         if (isAngle.get()) {
@@ -232,6 +236,7 @@ public class FXMLDocumentController implements Initializable {
         energy = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
         scale = new SimpleDoubleProperty(1);
         isAngle = new SimpleBooleanProperty(true);
+        isSPol = new SimpleBooleanProperty(true);
         //Defining map of default values
         defaultStringMap = new HashMap<>();
         defaultStringMap.put("Incidence angle, degree:", "60");
@@ -273,6 +278,9 @@ public class FXMLDocumentController implements Initializable {
             thetaField.setText(defaultStringMap.get((String) enAngChoiceBox.getValue()));
             valueMemory.remove(thetaField);
         });
+        //Switching polarization
+        isSPol.bind(Bindings.createBooleanBinding(()
+                -> ((String) enPolChoiceBox.getValue()).equals("s-polarization"), enPolChoiceBox.valueProperty()));
     }
 
     /*
@@ -297,23 +305,23 @@ public class FXMLDocumentController implements Initializable {
             /*
              * Writting formatted graph data into the text file
              */
-            invokeLater(()-> {
+            invokeLater(() -> {
                 Formatter fm;
                 try (PrintWriter pw = new PrintWriter(new FileWriter(file, false))) {
                     for (int i = 0; i < mainChart.getData().get(0).getData().size(); i++) {
                         fm = new Formatter();
                         fm.format("%f %f %f", (Double) mainChart.getData().get(0)
-                            .getData().get(i).getXValue(), (Double) mainChart.getData().get(0)
-                            .getData().get(i).getYValue(), (Double) mainChart.getData().get(1)
-                            .getData().get(i).getYValue());
+                                .getData().get(i).getXValue(), (Double) mainChart.getData().get(0)
+                                .getData().get(i).getYValue(), (Double) mainChart.getData().get(1)
+                                .getData().get(i).getYValue());
                         pw.println(fm);
                     }
                 } catch (IOException e) {
                     /*
-                    * Using Swing's JOptionPane class to display simple message
-                    */
+                     * Using Swing's JOptionPane class to display simple message
+                     */
                     JOptionPane.showMessageDialog(dialog, "Error while writing to the data file", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
@@ -391,10 +399,10 @@ public class FXMLDocumentController implements Initializable {
                 if (option == JOptionPane.OK_OPTION) {
                     maxRayNumber = (int) Math.round(TestValueWithMemory(1, 1000000, shadowMaxRayNumberBox, "10000", valueMemorySwing));
                     if (sPolButton.isSelected() || spPolButton.isSelected()) {
-                        sPol = true;
+                        sPolShadow = true;
                     }
                     if (pPolButton.isSelected() || spPolButton.isSelected()) {
-                        pPol = true;
+                        pPolShadow = true;
                     }
                 }
             });
@@ -419,7 +427,7 @@ public class FXMLDocumentController implements Initializable {
                 wFile = shadowFileWrite.getFile();
                 for (int i = 0; i < nrays; i++) {
                     shadowFileRead.read(ray);
-                    ray = crystal.rayConversion(ray, sPol, pPol);
+                    ray = crystal.rayConversion(ray, sPolShadow, pPolShadow);
                     shadowFileWrite.write(ray);
                 }
             } catch (EOFException e) {
