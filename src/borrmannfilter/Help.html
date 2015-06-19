@@ -20,13 +20,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <title>Borrmann filter application help</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+         <!--
+         @import "helpStyleSheet.css";
+         -->
+        </style>
     </head>
     <body>
-        <h1>Introduction</h1>
-        <div>The primary function Borrmann filter application is to simulate
-        propagation of X-ray radiation through thin symmetric and asymmetric 
-        crystals. The application can display rocking curves as function of the energy
-        or incidence angle of both reflected and transmitted radiation for both 
-        Bragg and Laue geometries.</div>
+        <div class="iHeader">
+            <h2>Introduction</h2>
+            <p>The primary purpose of the Borrmann filter application is to simulate
+                propagation of X-ray radiation through thin symmetric as well as asymmetric 
+                crystals. The application can display rocking curves as function of the energy
+                or incidence angle of both reflected and transmitted radiation for 
+                Bragg and Laue geometries and both s- and p-polarizations.</p>
+            <p>In addition, the application can transform a binary Shadow file
+                containing rays incident on a thin Borrmann crystal into a new Shadow binary 
+                files containing rays after passing through a thin Borrmann crystal. The 
+                applications adjusts the electrical fields and phases for both polarizations.
+            </p>
+        </div>
+        <div style="width:25%; float: left">
+            <h3 class="cHeader">Contents</h3>
+            <ul>
+                <li class="conItem"><a href="#item1">Calculating rocking curves</a></li>
+                <li class="conItem"><a href="#item2">Processing Shadow files</a></li>
+            </ul>
+        </div>
+        <div class="item" id="item1">
+            <h2>Calculating rocking curves</h2>
+            <p>
+                To display rocking curves, enter scattering factors f<sub>1</sub>
+                and f<sub>2</sub>, molar mass of the crystal material, density, 
+                inter-plane distance, cutting angle and crystal thickness. The 
+                rocking curves can be drawn as either function of X-ray energy or
+                incidence angle and either incidence angle or X-ray energy must be
+                specified, respectively.                    
+            </p>
+            <p>
+                To create the graph, press the <i>Calculate</i> button and observe the
+                result in the pane below. The type of the geometry: Bragg or Laue 
+                as well as energy or angular range will be determined automatically. In 
+                the Graph parameters box the relative scale of the X-axis can be selected a
+                s well the polarization displayed. To recalculate the graph with changed 
+                scale and/or for different polarization press <i>Calculate</i> button again.
+            </p>
+        </div>
+        <div id="item1">
+            <h2>Processing Shadow files</h2>
+        </div>
     </body>
 </html>
