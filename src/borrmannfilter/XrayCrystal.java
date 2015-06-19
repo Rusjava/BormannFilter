@@ -34,11 +34,11 @@ public class XrayCrystal {
     public final static double COEF = 6.02e23 * 2.81794e-15 / Math.PI;
 
     public XrayCrystal() {
-        d = 1.92e-10;
-        den = 2000;
-        theta = 0;
-        L = 0.00025;
-        M = 0.02809;
+        this.d = 1.92e-10;
+        this.den = 2000;
+        this.theta = 0;
+        this.L = 0.00025;
+        this.M = 0.02809;
         this.f = new Complex(-14.321, 0.494);
     }
 
