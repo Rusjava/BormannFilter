@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 Samsung
+Copyright (C) 2015 Ruslan Feshchenko
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,26 +20,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     Version    : 0.1
 */
 
-.iHeader {
+.boxBorder {
     border-color: black;
     border-width: 2px;
     border-radius: 5px;
     border-style: solid;
-    
+}
+
+.iHeader { 
+    padding: 5px;
+    background-color: buttonface;
+
 }
 .cHeader {
     color: red;
 }
 
+.contents {
+    width:15em;
+    float: left;
+    padding: 5px;
+    margin: 5px;
+}
+
 .conItem {
     font-size: 90%;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .item {
     display:none;
 }
 
-.item::selection {
+.item:target {
     display: block;
+}
+
+a:active, a:hover {
+    color: cyan;
 }
 

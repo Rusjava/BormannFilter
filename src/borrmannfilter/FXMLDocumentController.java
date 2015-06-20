@@ -46,6 +46,7 @@ import javafx.stage.FileChooser;
 import static javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.*;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.scene.image.*;
@@ -79,6 +80,7 @@ import javax.imageio.ImageIO;
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
 import java.net.MalformedURLException;
+import javafx.concurrent.Worker;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -130,7 +132,6 @@ public class FXMLDocumentController implements Initializable {
     //Image parameters
     private File iFile = null;
     private int iWidth = 800, iHeight = 600;
-    private String workPath;
 
     private final double CONV = 2 * Math.PI * 3.1614e-26 / 1.602e-19;
 
@@ -230,7 +231,6 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        workPath = System.getProperty("user.dir");
         crystal = new XrayCrystal();
         angle = Math.PI / 3;
         energy = CONV / (2 * crystal.getD() * Math.cos(angle + crystal.getTheta()));
@@ -555,17 +555,18 @@ public class FXMLDocumentController implements Initializable {
          * Displaying help html file
          */
         WebView webView = new WebView();
-        File file = new File(workPath + "\\help\\Help.html");
-        try {
-            webView.getEngine().load(file.toURI().toURL().toString());
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         Stage stage = new Stage();
-        stage.setTitle("Borrmann application help topics");
-        stage.setScene(new Scene(webView));
-        stage.show();
+        URL helpUrl = BorrmannFilter.class.getResource("/borrmannfilterhelp/Help.html");
+        WebEngine engine = webView.getEngine();
+        engine.load(helpUrl.toString());
+        engine.getLoadWorker().stateProperty().addListener((ObservableValue<? extends Worker.State> v, Worker.State os, Worker.State ns) -> {
+           if (ns == Worker.State.SUCCEEDED)  {
+                String title=webView.getEngine().getTitle();
+                stage.setTitle(title);
+                stage.setScene(new Scene(webView));
+                stage.show();
+           } 
+        });  
     }
 
     @FXML
