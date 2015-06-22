@@ -195,12 +195,17 @@ public class XrayCrystal {
      *
      * @param phi incidence angle
      * @param wl wavelength
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public Complex getBraggReflectivity(double phi, double wl) {
+    public Complex getBraggReflectivity(double phi, double wl, boolean pol) {
         Complex K1, K2, ex, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        B = f.multiply(COEF * wl * wl * den / M);
+        if (pol) {
+            B = f.multiply(COEF * wl * wl * den / M);
+        } else {
+            B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
+        }
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
@@ -233,10 +238,11 @@ public class XrayCrystal {
      *
      * @param phi
      * @param wl
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public double getBraggIReflectivity(double phi, double wl) {
-        Complex r = getBraggReflectivity(phi, wl);
+    public double getBraggIReflectivity(double phi, double wl, boolean pol) {
+        Complex r = getBraggReflectivity(phi, wl, pol);
         return r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
     }
 
@@ -245,12 +251,17 @@ public class XrayCrystal {
      *
      * @param phi incidence angle
      * @param wl wavelength
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public Complex getBraggTransmittivity(double phi, double wl) {
+    public Complex getBraggTransmittivity(double phi, double wl, boolean pol) {
         Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq, rec;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        B = f.multiply(COEF * wl * wl * den / M);
+        if (pol) {
+            B = f.multiply(COEF * wl * wl * den / M);
+        } else {
+            B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
+        }
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
@@ -286,10 +297,11 @@ public class XrayCrystal {
      *
      * @param phi
      * @param wl
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public double getBraggITransmittivity(double phi, double wl) {
-        Complex t = getBraggTransmittivity(phi, wl);
+    public double getBraggITransmittivity(double phi, double wl, boolean pol) {
+        Complex t = getBraggTransmittivity(phi, wl, pol);
         return t.conjugate().multiply(t).getReal();
     }
 
@@ -324,12 +336,17 @@ public class XrayCrystal {
      *
      * @param phi incidence angle
      * @param wl wavelength
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public Complex getLaueReflectivity(double phi, double wl) {
+    public Complex getLaueReflectivity(double phi, double wl, boolean pol) {
         Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        B = f.multiply(COEF * wl * wl * den / M);
+        if (pol) {
+            B = f.multiply(COEF * wl * wl * den / M);
+        } else {
+            B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
+        }
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
@@ -350,7 +367,7 @@ public class XrayCrystal {
         ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
         ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
                 subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
-        K1K2=K1.multiply(K2);
+        K1K2 = K1.multiply(K2);
         if (ex.isNaN()) {
             return ex1.divide(K1K2.subtract(1)).multiply(K2).negate();
         }
@@ -359,30 +376,36 @@ public class XrayCrystal {
         }
         return ex.subtract(1).divide(K1K2.subtract(1)).multiply(K2).multiply(ex1);
     }
-    
+
     /**
      * Returning the intensity Laue reflectivity coefficient
      *
      * @param phi
      * @param wl
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public double getLaueIReflectivity(double phi, double wl) {
-        Complex r = getLaueReflectivity(phi, wl);
+    public double getLaueIReflectivity(double phi, double wl, boolean pol) {
+        Complex r = getLaueReflectivity(phi, wl, pol);
         return r.conjugate().multiply(r).getReal() * Math.cos(getDiffAngle(phi, wl)) / Math.cos(phi);
     }
-    
+
     /**
      * Returning the amplitude Laue transmittivity coefficient
      *
      * @param phi incidence angle
      * @param wl wavelength
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public Complex getLaueTransmittivity(double phi, double wl) {
+    public Complex getLaueTransmittivity(double phi, double wl, boolean pol) {
         Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        B = f.multiply(COEF * wl * wl * den / M);
+        if (pol) {
+            B = f.multiply(COEF * wl * wl * den / M);
+        } else {
+            B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
+        }
         eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
@@ -403,36 +426,55 @@ public class XrayCrystal {
         ex = Complex.I.multiply(B).multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).multiply(L).exp();
         ex1 = B.multiply(sq).multiply(k2 / Math.sqrt(-qplus * qminus)).
                 subtract(omega1.subtract(omega2)).multiply(Complex.I).multiply(-L / 2).exp();
-        K1K2=K1.multiply(K2);
+        K1K2 = K1.multiply(K2);
         if (ex.isNaN()) {
             return ex1.divide(K1K2.subtract(1)).negate();
         }
         if (ex1.isNaN()) {
             return Complex.ZERO;
-        }   
+        }
         return ex.multiply(K1K2).subtract(1).divide(K1K2.subtract(1)).multiply(ex1);
     }
-    
+
     /**
      * Returning the intensity Laue transmittivity coefficient
      *
      * @param phi
      * @param wl
+     * @param pol s-polarization - true, p-polarization - false
      * @return
      */
-    public double getLaueITransmittivity(double phi, double wl) {
-        Complex t = getLaueTransmittivity(phi, wl);
+    public double getLaueITransmittivity(double phi, double wl, boolean pol) {
+        Complex t = getLaueTransmittivity(phi, wl, pol);
         return t.conjugate().multiply(t).getReal();
     }
-    
+
     /**
      * Return Shadow rays modified by passing through the crystal
+     *
      * @param oldRay
+     * @param phi incidence angle
      * @param sPol modify s-polarization
      * @param pPol modify p-polarization
      * @return
      */
-    public double[] rayConversion (double [] oldRay, Boolean sPol, Boolean pPol) {
+    public double[] rayConversion(double[] oldRay, double phi, Boolean sPol, Boolean pPol) {
+        Complex R;
+        double wl = 2 * Math.PI / oldRay[10] * 100;
+        if (sPol) {
+            R = getBraggTransmittivity(phi + oldRay[5], wl, true);
+            oldRay[6] *= R.abs();
+            oldRay[7] *= R.abs();
+            oldRay[8] *= R.abs();
+            oldRay[13] += R.getArgument();
+        }
+        if (pPol) {
+            R = getBraggTransmittivity(phi + oldRay[3], wl, false);
+            oldRay[15] *= R.abs();
+            oldRay[16] *= R.abs();
+            oldRay[17] *= R.abs();
+            oldRay[14] += R.getArgument();
+        }
         return oldRay;
     }
 }

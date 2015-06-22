@@ -205,19 +205,19 @@ public class FXMLDocumentController implements Initializable {
             iter = offset + i * step;
             if (isAngle.get()) {
                 if (isLaue) {
-                    R = crystal.getBraggIReflectivity(angle, CONV / iter);
-                    T = crystal.getBraggITransmittivity(angle, CONV / iter);
+                    R = crystal.getBraggIReflectivity(angle, CONV / iter, true);
+                    T = crystal.getBraggITransmittivity(angle, CONV / iter, true);
                 } else {
-                    R = crystal.getLaueIReflectivity(angle, CONV / iter);
-                    T = crystal.getLaueITransmittivity(angle, CONV / iter);
+                    R = crystal.getLaueIReflectivity(angle, CONV / iter, true);
+                    T = crystal.getLaueITransmittivity(angle, CONV / iter, true);
                 }
             } else {
                 if (isLaue) {
-                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy);
-                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy);
+                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy, true);
+                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy, true);
                 } else {
-                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy);
-                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy);
+                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy, true);
+                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy, true);
                 }
             }
             rSeries.getData().add(new Data<>(iter, R));
@@ -429,7 +429,7 @@ public class FXMLDocumentController implements Initializable {
                 wFile = shadowFileWrite.getFile();
                 for (int i = 0; i < nrays; i++) {
                     shadowFileRead.read(ray);
-                    ray = crystal.rayConversion(ray, sPolShadow, pPolShadow);
+                    ray = crystal.rayConversion(ray, angle, sPolShadow, pPolShadow);
                     shadowFileWrite.write(ray);
                 }
             } catch (EOFException e) {
