@@ -56,9 +56,9 @@
                             <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
                             <TextField fx:id="f2Field" text="0.494" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="Density, g cm⁻³:" GridPane.columnIndex="0"  GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
+                            <Label text="Density, g cm⁻³:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
                             <TextField fx:id="denField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                            <Label text="Molar mass, g/mol:" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
+                            <Label text="Molar mass, g/mol:" minWidth="102" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
                             <TextField fx:id="MField" text="28.09" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         </children>
                      <columnConstraints>
@@ -120,7 +120,8 @@
                         </items>                         
                         </ChoiceBox>
                     </HBox>
-                    <HBox styleClass="actions" alignment="BOTTOM_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <Label styleClass="BoxText" text="Actions" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                    <HBox styleClass="actions" alignment="BOTTOM_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
                         <children>
                             <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
                             <Button fx:id="saveButton" alignment="CENTER_RIGHT" onAction="#handleSaveButtonAction" text="Save" />
@@ -143,7 +144,7 @@
                   <RowConstraints />
                </rowConstraints>
             </GridPane>
-            <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="395.0">
+            <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="430.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="BoxText" text="Graph description:" BorderPane.alignment="CENTER" />
                </top>
