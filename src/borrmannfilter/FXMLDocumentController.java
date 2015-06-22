@@ -108,6 +108,8 @@ public class FXMLDocumentController implements Initializable {
     //Swing components for Shadow parameters
     JTextField shadowMaxRayNumberBox;
     JRadioButton sPolButton, pPolButton, spPolButton;
+    //Swing components for image parameters
+    JTextField imageWidthJTextField, imageHeightJTextField;
     /*
      * End of Swing components declarations
      */
@@ -546,6 +548,8 @@ public class FXMLDocumentController implements Initializable {
             sPolButton.setSelected(true);
             pPolButton = new JRadioButton("only p-polarization");
             spPolButton = new JRadioButton("both s and p-polarization");
+            imageHeightJTextField = new JTextField("600");
+            imageWidthJTextField = new JTextField("800");
         });
     }
 
@@ -620,6 +624,25 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void handleImageParametersMenuAction(ActionEvent event) {
+    private void handleImageParametersMenuAction(ActionEvent event) {/*
+         * Image paramters: image size
+         */
+        try {
+            invokeAndWait(() -> {
+                Object[] message = {
+                    "Image width, px", imageWidthJTextField,
+                    "Image height, px", imageHeightJTextField
+                };
+                int option = JOptionPane.showConfirmDialog(dialog, message, "Image parameters",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    iWidth = (int) Math.round(TestValueWithMemory(10, 10000, imageWidthJTextField, "800", valueMemorySwing));
+                    iHeight = (int) Math.round(TestValueWithMemory(10, 10000, imageHeightJTextField, "600", valueMemorySwing));
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }
