@@ -52,13 +52,13 @@
                     <Label styleClass="BoxText" text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
                     <GridPane styleClass="vpane" hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <children>
-                            <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0"  GridPane.halignment="RIGHT" />
                             <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                            <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label text="f2: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
                             <TextField fx:id="f2Field" text="0.494" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="Density, g cm⁻³:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label text="Density, g cm⁻³:" GridPane.columnIndex="0"  GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
                             <TextField fx:id="denField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                            <Label prefHeight="17.0" prefWidth="127.0" text="Molar mass, g/mol:" GridPane.rowIndex="3" />
+                            <Label text="Molar mass, g/mol:" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
                             <TextField fx:id="MField" text="28.09" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         </children>
                      <columnConstraints>
@@ -74,11 +74,11 @@
                     </GridPane>
                     <GridPane styleClass="vpane" hgap="5" vgap="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <children>
-                            <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
                             <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                            <Label text="Thickness, mm: " GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label text="Thickness, mm: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT" />
                             <TextField fx:id="LField" text="0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />   
-                            <ChoiceBox fx:id="enAngChoiceBox" value="Incidence angle, degree:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+                            <ChoiceBox fx:id="enAngChoiceBox" value="Incidence angle, degree:" GridPane.columnIndex="0" GridPane.rowIndex="2"  GridPane.halignment="RIGHT"> 
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
                                         <String fx:value="Incidence angle, degree:" />
@@ -87,7 +87,7 @@
                                 </items>                         
                             </ChoiceBox>
                             <TextField fx:id="thetaField" text="60" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                            <Label text="Cutting angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Label text="Cutting angle, degree: " GridPane.columnIndex="0" GridPane.rowIndex="3"  GridPane.halignment="RIGHT" />
                             <TextField fx:id="cutField" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         </children>
                         <padding>
