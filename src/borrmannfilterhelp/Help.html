@@ -29,7 +29,7 @@ version: 0.1
         </style>
     </head>
     <body>
-        <div class="iHeader boxBorder">
+        <header class="intro boxborder">
             <h3 class="header">Introduction</h3>
             <p>The primary purpose of the Borrmann filter application is to simulate
                 propagation of X-ray radiation through thin symmetric as well as asymmetric 
@@ -41,24 +41,24 @@ version: 0.1
                 files containing rays after passing through a thin Borrmann crystal. The 
                 applications adjusts the electrical fields and phases for both polarizations.
             </p>
-        </div>
-        <div class="contents boxBorder">
+        </header>
+        <div class="contents boxborder">
             <h3 class="header">Contents</h3>
             <ul>
-                <li class="conItem"><a href="#item1">Calculating rocking curves</a></li>
-                <li class="conItem"><a href="#item2">Saving the results of calculations</a></li>
-                <li class="conItem"><a href="#item3">Setting up additional graph parameters</a></li>
-                <li class="conItem"><a href="#item4">Processing Shadow files</a></li>
-                <li class="conItem"><a href="#item5">Miscellaneous topics</a></li>
-                <li class="conItem"><a href="#item6">License</a></li>
+                <li><a href="#item1">Calculating rocking curves</a></li>
+                <li><a href="#item2">Saving the results of calculations</a></li>
+                <li><a href="#item3">Setting up additional graph parameters</a></li>
+                <li><a href="#item4">Processing Shadow files</a></li>
+                <li><a href="#item5">Miscellaneous topics</a></li>
+                <li><a href="#item6">License</a></li>
             </ul>
         </div>
         <div class="item" id="item1">
             <h3 class="header">Calculating rocking curves</h3>
             <p>
                 To display rocking curves, enter scattering factors f<sub>1</sub>
-                and f<sub>2</sub>, molar mass of the crystal material, density, 
-                inter-plane distance, cutting angle and crystal thickness. The 
+                and f<sub>2</sub>, molar mass M of the crystal material, density &rho;, 
+                inter-plane distance d, cutting angle and crystal thickness. The 
                 rocking curves can be drawn as either function of X-ray energy or
                 incidence angle and either incidence angle or X-ray energy must be
                 specified, respectively.                    
@@ -74,19 +74,50 @@ version: 0.1
         </div>
         <div class="item" id="item2">
             <h3 class="header">Saving the results of calculations</h3>
+            <p>
+                To save the graph as a text file, press the <i>Save</i> button and choose the file
+                name of text file.
+            </p>
         </div>
         <div class="item" id="item3">
             <h3 class="header">Setting up additional graph parameters</h3>
+            <p>
+                To change the optional graph parameters select the <i>Options/Graph parameters...</i>
+                item from the main menu. Then enter the size of the graph in points and set whether the 
+                X range of the graph is determined automatically. If the manual range selection is chosen,
+                enter the X range of the graph in eV or radians.
+            </p>
         </div>
         <div class="item" id="item4">
             <h3 class="header">Processing Shadow files</h3>
+            <p>
+                The application allows one to apply a Borrmann filter to a binary Shadow file. As a result
+                a new Shadow binary file is formed where the electrical field values and phases for one or
+                both polarizations are adjusted as though the X-ray radiation propagated through a thin
+                Borrmann crystal taking into account incidence angles and photon energies. To apply the 
+                filter select <i>Shadow/Filter...</i> from the main menu. To change the filtering parameters
+                select <i>Shadow/Parameters...</i> from the main menu and enter the maximum number of rays
+                processed and the polarization to which the filter is applied.
+            </p>
         </div>
         <div class="item" id="item5">
             <h3 class="header">Miscellaneous topics</h3>
+            <p>
+                To save the graph as an image, select <i>File/Save as image...</i> from the main menu.
+                The available image formats are jpg, tiff, gif and bmp. The image saving parameters can
+                be changed using <i>Options/Image parameters...</i> where the image size and other parameters can 
+                be selected. The graph can be printed using <i>File/Save as image...</i> from the main
+                menu. The page options can be selected using <i>Options/Page setup...</i> from the same
+                menu. The access the information about the application, use <i>Help</i> menu.
+            </p>
         </div>
         <div class="item" id="item6">
             <h3 class="header">License</h3>
+            <p>
+                This application is distributed under GNU General Public License. See 
+                <a href="http://www.gnu.org/licenses">http://www.gnu.org/license</a> for details.
+            </p>
         </div>
-        <div class="footer">&copy; Ruslan Feshchenko, June 2015, version 0.5</div>
+        <footer class="footer">&copy; Ruslan Feshchenko, June 2015, version 0.5</footer>
     </body>
 </html>

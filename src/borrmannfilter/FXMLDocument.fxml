@@ -30,11 +30,12 @@
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleGraphParamMenuAction" text="Graph parameters..." />
                     <MenuItem mnemonicParsing="false" onAction="#handlePageSetupMenuAction" text="Page setup..." />
+                    <MenuItem mnemonicParsing="false" onAction="#handleImageParametersMenuAction" text="Image parameters..." />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Shadow">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleShadowParamMenuAction" text="Shadow parameters..." />
+                    <MenuItem mnemonicParsing="false" onAction="#handleShadowParamMenuAction" text="Parameters..." />
                     <MenuItem mnemonicParsing="false" onAction="#handleFilterMenuAction" text="Filter..." />
                   </items>
                 </Menu>
