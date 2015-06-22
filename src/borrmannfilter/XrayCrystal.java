@@ -201,12 +201,11 @@ public class XrayCrystal {
     public Complex getBraggReflectivity(double phi, double wl, boolean pol) {
         Complex K1, K2, ex, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        if (pol) {
-            B = f.multiply(COEF * wl * wl * den / M);
-        } else {
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        if (!pol) {
             B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
         }
-        eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
@@ -257,12 +256,11 @@ public class XrayCrystal {
     public Complex getBraggTransmittivity(double phi, double wl, boolean pol) {
         Complex K1, K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq, rec;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        if (pol) {
-            B = f.multiply(COEF * wl * wl * den / M);
-        } else {
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        if (!pol) {
             B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
         }
-        eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
@@ -342,12 +340,11 @@ public class XrayCrystal {
     public Complex getLaueReflectivity(double phi, double wl, boolean pol) {
         Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        if (pol) {
-            B = f.multiply(COEF * wl * wl * den / M);
-        } else {
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        if (!pol) {
             B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
         }
-        eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
@@ -401,12 +398,11 @@ public class XrayCrystal {
     public Complex getLaueTransmittivity(double phi, double wl, boolean pol) {
         Complex K1, K2, K1K2, ex, ex1, R0, g, B, eps0, omega1, omega2, sq;
         double qplus, qminus, rq, q, k2, sphi, sphi1, cphi, cphi1;
-        if (pol) {
-            B = f.multiply(COEF * wl * wl * den / M);
-        } else {
+        B = f.multiply(COEF * wl * wl * den / M);
+        eps0 = B.add(1);
+        if (!pol) {
             B = f.multiply(COEF * wl * wl * den / M * Math.cos(2 * phi));
         }
-        eps0 = B.add(1);
         k2 = Math.pow(2 * Math.PI / wl, 2);
         q = Math.PI / d * Math.cos(theta);
         sphi = Math.sin(phi);
