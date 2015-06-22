@@ -205,19 +205,19 @@ public class FXMLDocumentController implements Initializable {
             iter = offset + i * step;
             if (isAngle.get()) {
                 if (isLaue) {
-                    R = crystal.getBraggIReflectivity(angle, CONV / iter, true);
-                    T = crystal.getBraggITransmittivity(angle, CONV / iter, true);
+                    R = crystal.getBraggIReflectivity(angle, CONV / iter, isSPol.get());
+                    T = crystal.getBraggITransmittivity(angle, CONV / iter, isSPol.get());
                 } else {
-                    R = crystal.getLaueIReflectivity(angle, CONV / iter, true);
-                    T = crystal.getLaueITransmittivity(angle, CONV / iter, true);
+                    R = crystal.getLaueIReflectivity(angle, CONV / iter, isSPol.get());
+                    T = crystal.getLaueITransmittivity(angle, CONV / iter, isSPol.get());
                 }
             } else {
                 if (isLaue) {
-                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy, true);
-                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy, true);
+                    R = crystal.getBraggIReflectivity(iter * Math.PI / 180, CONV / energy, isSPol.get());
+                    T = crystal.getBraggITransmittivity(iter * Math.PI / 180, CONV / energy, isSPol.get());
                 } else {
-                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy, true);
-                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy, true);
+                    R = crystal.getLaueIReflectivity(iter * Math.PI / 180, CONV / energy, isSPol.get());
+                    T = crystal.getLaueITransmittivity(iter * Math.PI / 180, CONV / energy, isSPol.get());
                 }
             }
             rSeries.getData().add(new Data<>(iter, R));
