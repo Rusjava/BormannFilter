@@ -14,7 +14,7 @@
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLDocumentController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="400.0" prefWidth="700.0">
+    <AnchorPane minHeight="0.0" minWidth="450.0" prefWidth="700.0">
          <children>
             <MenuBar layoutX="20.0" prefHeight="25.0" prefWidth="660.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
               <menus>
@@ -50,7 +50,7 @@
             <GridPane hgap="10" layoutX="20.0" layoutY="20.0" prefHeight="220.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
                <children>
                     <Label styleClass="BoxText" text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
-                    <GridPane hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <GridPane styleClass="vpane" hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <children>
                             <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="f1Field" text="14.321" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -72,7 +72,7 @@
                         <RowConstraints />
                      </rowConstraints>    
                     </GridPane>
-                    <GridPane hgap="5" vgap="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <GridPane styleClass="vpane" hgap="5" vgap="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <children>
                             <Label text="Interplane distance, nm: " GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="dField" text="0.192" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -105,9 +105,11 @@
                      </rowConstraints>
                     </GridPane>
                     <Label styleClass="BoxText" text="Graph parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />         
-                    <Label text="X-axis scale" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <Slider majorTickUnit="1" max="3" min="0" showTickLabels="true" showTickMarks="true" value="1" GridPane.columnIndex="0" GridPane.rowIndex="4" fx:id="xScaleSlider" />
-                    <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                    <VBox styleClass="vpane" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                        <Label text="X-axis scale" textAlignment="CENTER" />
+                        <Slider majorTickUnit="1" max="3" min="0" showTickLabels="true" showTickMarks="true" value="1" fx:id="xScaleSlider" />
+                    </VBox>
+                    <HBox styleClass="vpane" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
                         <Label text="X-ray polarization: "/>
                         <ChoiceBox fx:id="enPolChoiceBox" value="s-polarization"> 
                         <items>
@@ -116,9 +118,9 @@
                                 <String fx:value="p-polarization" />
                             </FXCollections>
                         </items>                         
-                    </ChoiceBox>
+                        </ChoiceBox>
                     </HBox>
-                    <HBox styleClass="actions" alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <HBox styleClass="actions" alignment="BOTTOM_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
                         <children>
                             <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
                             <Button fx:id="saveButton" alignment="CENTER_RIGHT" onAction="#handleSaveButtonAction" text="Save" />
@@ -141,7 +143,7 @@
                   <RowConstraints />
                </rowConstraints>
             </GridPane>
-            <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="370.0">
+            <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="395.0">
                <top>
                   <Label fx:id="output" minWidth="100.0" styleClass="BoxText" text="Graph description:" BorderPane.alignment="CENTER" />
                </top>
