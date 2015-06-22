@@ -47,14 +47,13 @@ import static javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.*;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.scene.image.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.FlowPane;
 import javafx.print.*;
+import javafx.concurrent.Worker;
 //Java Input/Output packes and classes
 import java.io.File;
 import java.io.FileWriter;
@@ -79,8 +78,6 @@ import javax.imageio.ImageIO;
 
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
-import java.net.MalformedURLException;
-import javafx.concurrent.Worker;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -495,11 +492,11 @@ public class FXMLDocumentController implements Initializable {
             job.endJob();
         }
     }
-    /*
-     * Creating LineChart
-     */
 
     private void createLineChart(Series rSeries, Series tSeries, String XLabel, double offset, double step, LineChart<?, ?> chart) {
+        /*
+         * Creating LineChart
+         */
         int xsize = rSeries.getData().size();
         chart.getData().clear();
         chart.getData().add(rSeries);
@@ -521,10 +518,10 @@ public class FXMLDocumentController implements Initializable {
         ((NumberAxis) chart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
     }
 
-    /*
-     * Initialization of Swing components on EDT
-     */
     private void initSwingComponents() {
+        /*
+         * Initialization of Swing components on EDT
+         */
         invokeLater(() -> {
             dialog = new JDialog();
             dialog.setAlwaysOnTop(true);
