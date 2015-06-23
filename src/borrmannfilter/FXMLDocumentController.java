@@ -81,6 +81,8 @@ import javax.imageio.ImageIO;
 
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import shadowfileconverter.ShadowFiles;
 
@@ -670,5 +672,17 @@ public class FXMLDocumentController implements Initializable {
         /*
         * Displaying properties menu for the main chart
         */
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("FXMLChartProperties.fxml"));
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Stage stage = new Stage();
+        stage.setTitle("Borrmann filter application");
+        stage.setScene(new Scene(root));
+        
+        
+        stage.show();
     }
 }
