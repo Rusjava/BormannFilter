@@ -18,7 +18,11 @@ package borrmannfilter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.DoubleProperty;
 
 /**
  * FXML Controller class
@@ -26,6 +30,14 @@ import javafx.fxml.Initializable;
  * @author Samsung
  */
 public class FXMLChartPropertiesController implements Initializable {
+    @FXML
+    private TextField lineThicknessField;
+    @FXML
+    private TextField fontSizeField;
+    @FXML
+    private TextField axisThicknessField;
+    //Properties
+    DoubleProperty lineThicknessProperty, fontSizeProperty, axisThicknessProperty;
 
     /**
      * Initializes the controller class.
@@ -35,6 +47,9 @@ public class FXMLChartPropertiesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        lineThicknessProperty = new SimpleDoubleProperty(2);
+        fontSizeProperty = new SimpleDoubleProperty(10);
+        axisThicknessProperty = new SimpleDoubleProperty(1);
     }    
     
 }

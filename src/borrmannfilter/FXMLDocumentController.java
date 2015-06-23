@@ -84,6 +84,8 @@ import static TextUtilities.MyTextUtilities.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -529,6 +531,7 @@ public class FXMLDocumentController implements Initializable {
         chart.getData().add(tSeries);
         chart.getData().get(1).setName("Transmittivity");
         chart.setCreateSymbols(false);
+        
         //Formatting X-axis
         ((NumberAxis) chart.getXAxis()).setAutoRanging(false);
         ((NumberAxis) chart.getXAxis()).setForceZeroInRange(false);
@@ -681,8 +684,8 @@ public class FXMLDocumentController implements Initializable {
         Stage stage = new Stage();
         stage.setTitle("Borrmann filter application");
         stage.setScene(new Scene(root));
-        
-        
+        stage.initModality(Modality.APPLICATION_MODAL); 
+        stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
 }
