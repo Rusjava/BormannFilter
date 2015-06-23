@@ -52,6 +52,9 @@ import javafx.scene.image.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.print.*;
 import javafx.concurrent.Worker;
 //Java Input/Output packes and classes
@@ -78,6 +81,7 @@ import javax.imageio.ImageIO;
 
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
+import javafx.scene.control.ScrollPane;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -139,6 +143,9 @@ public class FXMLDocumentController implements Initializable {
     private DoubleProperty scale;
     private BooleanProperty isAngle;
     private BooleanProperty isSPol;
+    //ConextMenu
+    ContextMenu chartContextMenu;
+    MenuItem printContextMenuItem, saveImageContextMenuItem, propertiesContextMenuItem;
 
     @FXML
     private LineChart<Number, Number> mainChart;
@@ -158,6 +165,8 @@ public class FXMLDocumentController implements Initializable {
     private BorderPane chartPane;
     @FXML
     private ChoiceBox<?> enPolChoiceBox;
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -252,6 +261,20 @@ public class FXMLDocumentController implements Initializable {
                 job.getJobSettings().getPageLayout().getLeftMargin(), job.getJobSettings().getPageLayout().getRightMargin(),
                 job.getJobSettings().getPageLayout().getTopMargin(), job.getJobSettings().getPageLayout().getBottomMargin()
         );
+        
+        //Creating context menu
+        chartContextMenu = new ContextMenu();
+        printContextMenuItem = new MenuItem("Print...");
+        printContextMenuItem.setOnAction(this::handlePrintMenuAction);
+        saveImageContextMenuItem = new MenuItem("Save as image...");
+        saveImageContextMenuItem.setOnAction(this::handleSaveImageMenuAction);
+        propertiesContextMenuItem = new MenuItem("Properties...");
+        propertiesContextMenuItem.setOnAction(this::handlePropertiesMenuAction);
+        chartContextMenu.getItems().addAll(printContextMenuItem,
+                saveImageContextMenuItem, new SeparatorMenuItem(), propertiesContextMenuItem);
+        mainChart.setOnContextMenuRequested(event -> {
+            chartContextMenu.show(scrollPane.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+        });
 
         f1Field.textProperty().addListener(event -> crystal.setF1(TestValueWithMemory(0, 1000, f1Field, "14.321", valueMemory)));
         f2Field.textProperty().addListener(event -> crystal.setF2(TestValueWithMemory(0, 1000, f2Field, "0.494", valueMemory)));
@@ -641,5 +664,11 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    private void handlePropertiesMenuAction(ActionEvent event) {
+        /*
+        * Displaying properties menu for the main chart
+        */
     }
 }
