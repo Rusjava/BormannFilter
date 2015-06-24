@@ -265,7 +265,7 @@ public class FXMLDocumentController implements Initializable {
                 job.getJobSettings().getPageLayout().getLeftMargin(), job.getJobSettings().getPageLayout().getRightMargin(),
                 job.getJobSettings().getPageLayout().getTopMargin(), job.getJobSettings().getPageLayout().getBottomMargin()
         );
-        
+
         //Creating context menu
         chartContextMenu = new ContextMenu();
         printContextMenuItem = new MenuItem("Print...");
@@ -531,7 +531,7 @@ public class FXMLDocumentController implements Initializable {
         chart.getData().add(tSeries);
         chart.getData().get(1).setName("Transmittivity");
         chart.setCreateSymbols(false);
-        
+
         //Formatting X-axis
         ((NumberAxis) chart.getXAxis()).setAutoRanging(false);
         ((NumberAxis) chart.getXAxis()).setForceZeroInRange(false);
@@ -589,13 +589,13 @@ public class FXMLDocumentController implements Initializable {
         WebEngine engine = webView.getEngine();
         engine.load(helpUrl.toString());
         engine.getLoadWorker().stateProperty().addListener((ObservableValue<? extends Worker.State> v, Worker.State os, Worker.State ns) -> {
-           if (ns == Worker.State.SUCCEEDED)  {
-                String title=webView.getEngine().getTitle();
+            if (ns == Worker.State.SUCCEEDED) {
+                String title = webView.getEngine().getTitle();
                 stage.setTitle(title);
                 stage.setScene(new Scene(webView));
                 stage.show();
-           } 
-        });  
+            }
+        });
     }
 
     @FXML
@@ -652,6 +652,7 @@ public class FXMLDocumentController implements Initializable {
     private void handleImageParametersMenuAction(ActionEvent event) {/*
          * Image paramters: image size
          */
+
         try {
             invokeAndWait(() -> {
                 Object[] message = {
@@ -668,24 +669,28 @@ public class FXMLDocumentController implements Initializable {
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private void handlePropertiesMenuAction(ActionEvent event) {
         /*
-        * Displaying properties menu for the main chart
-        */
+         * Displaying properties menu for the main chart
+         */
+        FXMLLoader loader = new FXMLLoader();
         Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("FXMLChartProperties.fxml"));
+            root = loader.load(getClass().getResource("FXMLChartProperties.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         Stage stage = new Stage();
         stage.setTitle("Borrmann filter application");
         stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL); 
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
+        stage.setOnHiding(ev -> {
+            System.out.println(((FXMLChartPropertiesController)loader.getController()).axisThicknessProperty.get());
+        });
         stage.show();
     }
 }

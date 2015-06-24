@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -7,18 +8,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" styleClass="mainFxmlClass" prefWidth="255" prefHeight="120" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLChartPropertiesController">
+<AnchorPane id="AnchorPane" prefHeight="130" prefWidth="255" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLChartPropertiesController">
     <stylesheets>
-        <URL value="@fxmlchartproperties.css"/>
+        <URL value="@fxmlchartproperties.css" />
     </stylesheets>
-    <GridPane hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <children>
-            <Label text="Line thickness: " GridPane.columnIndex="0" GridPane.rowIndex="0"  GridPane.halignment="RIGHT" />
-            <TextField fx:id="lineThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <Label text="Font size: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
-            <TextField fx:id="fontSizeField" text="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Axis thickness: " GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
-            <TextField fx:id="axisThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        </children>
-     </GridPane>
+   <children>
+       <GridPane hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+           <children>
+               <Label text="Line thickness: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+               <TextField fx:id="lineThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+               <Label text="Font size: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+               <TextField fx:id="fontSizeField" text="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <Label text="Axis thickness: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+               <TextField fx:id="axisThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                     <Button fx:id="okButtonBox" defaultButton="true" mnemonicParsing="false" onAction="#okButtonBoxAction" text="Ok" />
+                     <Button fx:id="cancelButtonBox" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonBoxAction" text="Cancel" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+           </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+   </children>
 </AnchorPane>

@@ -23,6 +23,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 
 /**
  * FXML Controller class
@@ -38,6 +40,10 @@ public class FXMLChartPropertiesController implements Initializable {
     private TextField axisThicknessField;
     //Properties
     DoubleProperty lineThicknessProperty, fontSizeProperty, axisThicknessProperty;
+    @FXML
+    private Button okButtonBox;
+    @FXML
+    private Button cancelButtonBox;
 
     /**
      * Initializes the controller class.
@@ -51,5 +57,15 @@ public class FXMLChartPropertiesController implements Initializable {
         fontSizeProperty = new SimpleDoubleProperty(10);
         axisThicknessProperty = new SimpleDoubleProperty(1);
     }    
+
+    @FXML
+    private void okButtonBoxAction(ActionEvent event) {
+        okButtonBox.getScene().getWindow().hide();
+    }
+
+    @FXML
+    private void cancelButtonBoxAction(ActionEvent event) {
+       cancelButtonBox.getScene().getWindow().hide();
+    }
     
 }
