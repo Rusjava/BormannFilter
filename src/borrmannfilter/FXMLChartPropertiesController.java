@@ -16,13 +16,12 @@
  */
 package borrmannfilter;
 
+import static TextUtilities.MyTextUtilities.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 
@@ -39,7 +38,9 @@ public class FXMLChartPropertiesController implements Initializable {
     @FXML
     private TextField axisThicknessField;
     //Properties
-    DoubleProperty lineThicknessProperty, fontSizeProperty, axisThicknessProperty;
+    public double lineThickness, fontSize, axisThickness;
+    
+    public boolean isChanged = false;
     @FXML
     private Button okButtonBox;
     @FXML
@@ -53,13 +54,14 @@ public class FXMLChartPropertiesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        lineThicknessProperty = new SimpleDoubleProperty(2);
-        fontSizeProperty = new SimpleDoubleProperty(10);
-        axisThicknessProperty = new SimpleDoubleProperty(1);
+        lineThicknessField.textProperty().addListener(event -> lineThickness = TestValue(0.1, 10, lineThicknessField, "2"));
+        fontSizeField.textProperty().addListener(event -> fontSize = TestValue(1, 40, fontSizeField, "2"));
+        axisThicknessField.textProperty().addListener(event -> axisThickness = TestValue(0.1, 10, axisThicknessField, "2"));
     }    
 
     @FXML
     private void okButtonBoxAction(ActionEvent event) {
+        isChanged = true;
         okButtonBox.getScene().getWindow().hide();
     }
 

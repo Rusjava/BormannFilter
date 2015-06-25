@@ -47,7 +47,7 @@ import static javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.*;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.transform.Scale;
+import javafx.scene.text.Font;
 import javafx.scene.image.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.Stage;
@@ -57,6 +57,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.print.*;
 import javafx.concurrent.Worker;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 //Java Input/Output packes and classes
 import java.io.File;
 import java.io.FileWriter;
@@ -81,11 +86,6 @@ import javax.imageio.ImageIO;
 
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.ScrollPane;
-import javafx.stage.Modality;
-import javafx.stage.StageStyle;
 import shadowfileconverter.ShadowFiles;
 
 /**
@@ -147,6 +147,8 @@ public class FXMLDocumentController implements Initializable {
     private DoubleProperty scale;
     private BooleanProperty isAngle;
     private BooleanProperty isSPol;
+    //Chart parameters
+    private double lineThickness = 2, fontSize = 10, axisThickness = 2;
     //ConextMenu
     ContextMenu chartContextMenu;
     MenuItem printContextMenuItem, saveImageContextMenuItem, propertiesContextMenuItem;
@@ -531,19 +533,26 @@ public class FXMLDocumentController implements Initializable {
         chart.getData().add(tSeries);
         chart.getData().get(1).setName("Transmittivity");
         chart.setCreateSymbols(false);
+        
 
         //Formatting X-axis
-        ((NumberAxis) chart.getXAxis()).setAutoRanging(false);
-        ((NumberAxis) chart.getXAxis()).setForceZeroInRange(false);
-        ((NumberAxis) chart.getXAxis()).setTickUnit(step * (xsize - 1) / 8);
-        ((NumberAxis) chart.getXAxis()).setLabel(XLabel);
-        ((NumberAxis) chart.getXAxis()).setUpperBound(offset + xsize * step / 2);
-        ((NumberAxis) chart.getXAxis()).setLowerBound(offset - (xsize - 1) * step / 2);
+        NumberAxis xaxis = (NumberAxis) chart.getXAxis();
+        Font font = new Font(fontSize);
+        xaxis.setAutoRanging(false);
+        xaxis.setForceZeroInRange(false);
+        xaxis.setTickUnit(step * (xsize - 1) / 8);
+        xaxis.setLabel(XLabel);
+        xaxis.setUpperBound(offset + xsize * step / 2);
+        xaxis.setLowerBound(offset - (xsize - 1) * step / 2);
+        xaxis.setTickLabelFont(font);
+        
         //Formatting Y-axis
-        ((NumberAxis) chart.getYAxis()).setTickUnit(0.2);
-        ((NumberAxis) chart.getYAxis()).setAutoRanging(false);
-        ((NumberAxis) chart.getYAxis()).setUpperBound(1);
-        ((NumberAxis) chart.getYAxis()).setLabel("(Transmi/Reflec)tivity");
+        NumberAxis yaxis = (NumberAxis) chart.getYAxis();
+        yaxis.setTickUnit(0.2);
+        yaxis.setAutoRanging(false);
+        yaxis.setUpperBound(1);
+        yaxis.setLabel("(Transmi/Reflec)tivity");
+        yaxis.setTickLabelFont(font);
     }
 
     private void initSwingComponents() {
@@ -677,19 +686,26 @@ public class FXMLDocumentController implements Initializable {
          * Displaying properties menu for the main chart
          */
         FXMLLoader loader = new FXMLLoader();
-        Parent root = null;
+        loader.setLocation(getClass().getResource("FXMLChartProperties.fxml"));
         try {
-            root = loader.load(getClass().getResource("FXMLChartProperties.fxml"));
+            loader.load();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Parent root = loader.getRoot();
         Stage stage = new Stage();
         stage.setTitle("Borrmann filter application");
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
+        final FXMLChartPropertiesController controller = 
+                (FXMLChartPropertiesController)loader.getController();
         stage.setOnHiding(ev -> {
-            System.out.println(((FXMLChartPropertiesController)loader.getController()).axisThicknessProperty.get());
+            if (controller.isChanged) {
+                lineThickness = controller.lineThickness;
+                fontSize = controller.fontSize;
+                axisThickness = controller.axisThickness;
+            }
         });
         stage.show();
     }
