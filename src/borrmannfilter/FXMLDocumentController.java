@@ -382,7 +382,6 @@ public class FXMLDocumentController implements Initializable {
             isAngle.get() ? "Min value, eV" : "Min value, degree", isAngle.get() ? minEnergyValueBox : minAngleValueBox,
             isAngle.get() ? "Max value, eV" : "Max value, degree", isAngle.get() ? maxEnergyValueBox : maxAngleValueBox
         };
-
         try {
             invokeAndWait(() -> {
                 int option = JOptionPane.showConfirmDialog(dialog, message, "Graph parameters",
@@ -537,7 +536,6 @@ public class FXMLDocumentController implements Initializable {
         chart.getData().add(tSeries);
         chart.getData().get(1).setName("Transmittivity");
         chart.setCreateSymbols(false);
-
         //Formatting X-axis
         NumberAxis xaxis = (NumberAxis) chart.getXAxis();
         xaxis.setAutoRanging(false);
@@ -546,7 +544,6 @@ public class FXMLDocumentController implements Initializable {
         xaxis.setLabel(XLabel);
         xaxis.setUpperBound(offset + xsize * step / 2);
         xaxis.setLowerBound(offset - (xsize - 1) * step / 2);
-
         //Formatting Y-axis
         NumberAxis yaxis = (NumberAxis) chart.getYAxis();
         yaxis.setTickUnit(0.2);
@@ -661,7 +658,6 @@ public class FXMLDocumentController implements Initializable {
     private void handleImageParametersMenuAction(ActionEvent event) {/*
          * Image paramters: image size
          */
-
         try {
             invokeAndWait(() -> {
                 Object[] message = {
@@ -678,7 +674,6 @@ public class FXMLDocumentController implements Initializable {
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void handlePropertiesMenuAction(ActionEvent event) {
