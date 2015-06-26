@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 //JavaFX packages and classes
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.chart.LineChart;
+import static javafx.scene.chart.ValueAxis.TickMark;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.chart.XYChart.Data;
@@ -148,7 +150,7 @@ public class FXMLDocumentController implements Initializable {
     private BooleanProperty isAngle;
     private BooleanProperty isSPol;
     //Chart parameters
-    private double lineThickness = 2, axisThickness = 2;
+    private double lineThickness = 1, axisThickness = 2;
     private int fontSize = 10;
     //ConextMenu
     ContextMenu chartContextMenu;
@@ -723,6 +725,13 @@ public class FXMLDocumentController implements Initializable {
         Font font = new Font(fSize);
         xaxis.setTickLabelFont(font);
         yaxis.setTickLabelFont(font);
-        chart.getScene().getRoot().setStyle(".chart-series-line {-fx-stroke-width: " + 4 + "px;}");
+        /*ObservableList<TickMark<Number>> list = xaxis.getTickMarks();
+        for (TickMark<?> tm: list) {
+            tm.setStyle("-fx-stroke-width: " + aThickness + "px;");
+        }*/
+                   
+        yaxis.setStyle("-fx-stroke-width: " + aThickness + "px;");
+        chart.getData().get(0).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
+        chart.getData().get(1).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
     }
 }

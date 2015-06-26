@@ -61,8 +61,8 @@ public class FXMLChartPropertiesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         formMemory = new HashMap<>();
-        lineThicknessField.textProperty().addListener(event -> lineThickness = TestValueWithMemory(0.1, 10, lineThicknessField, "2", formMemory));
-        fontSizeField.textProperty().addListener(event -> fontSize = (int) Math.round(TestValueWithMemory(1, 40, fontSizeField, "2", formMemory)));
+        lineThicknessField.textProperty().addListener(event -> lineThickness = TestValueWithMemory(0.1, 10, lineThicknessField, "1", formMemory));
+        fontSizeField.textProperty().addListener(event -> fontSize = (int) Math.round(TestValueWithMemory(1, 40, fontSizeField, "10", formMemory)));
         axisThicknessField.textProperty().addListener(event -> axisThickness = TestValueWithMemory(0.1, 10, axisThicknessField, "2", formMemory));
     }
 

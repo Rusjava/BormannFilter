@@ -49,10 +49,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     -fx-stroke-width: 1px;
 }
 
-.axis-tick-marks {
-    -fx-tick-mark-stroke-width:2px;
+.axis-tick-mark {
+    -fx-stroke-width: 2px;
 }
 
 .axis {
-    -fx-axis-stroke-width: 2px;
+    -fx-stroke-width: 2px;
 }

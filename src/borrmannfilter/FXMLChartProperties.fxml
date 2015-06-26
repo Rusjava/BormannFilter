@@ -16,7 +16,7 @@
        <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="5.0" hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
            <children>
                <Label text="Line thickness: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-               <TextField fx:id="lineThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+               <TextField fx:id="lineThicknessField" text="1" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                <Label text="Font size: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                <TextField fx:id="fontSizeField" text="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                <Label text="Axis thickness: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
