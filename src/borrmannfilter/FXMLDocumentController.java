@@ -34,8 +34,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.chart.LineChart;
-import static javafx.scene.chart.ValueAxis.TickMark;
 import javafx.scene.chart.NumberAxis;
+import static javafx.scene.chart.NumberAxis.TickMark;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Slider;
@@ -701,9 +701,9 @@ public class FXMLDocumentController implements Initializable {
         final FXMLChartPropertiesController controller
                 = (FXMLChartPropertiesController) loader.getController();
         stage.setOnShown(ev -> {
-            controller.fontSizeField.setText(new Integer(fontSize).toString());
-            controller.lineThicknessField.setText(new Double(lineThickness).toString());
-            controller.axisThicknessField.setText(new Double(axisThickness).toString());
+            controller.fontSizeField.setText(Integer.toString(fontSize));
+            controller.lineThicknessField.setText(Double.toString(lineThickness));
+            controller.axisThicknessField.setText(Double.toString(axisThickness));
         });
         stage.setOnHiding(ev -> {
             if (controller.isChanged) {
@@ -725,11 +725,11 @@ public class FXMLDocumentController implements Initializable {
         Font font = new Font(fSize);
         xaxis.setTickLabelFont(font);
         yaxis.setTickLabelFont(font);
-        /*ObservableList<TickMark<Number>> list = xaxis.getTickMarks();
+        ObservableList<TickMark<Number>> list = xaxis.getTickMarks();
+        /*
         for (TickMark<?> tm: list) {
-            tm.setStyle("-fx-stroke-width: " + aThickness + "px;");
-        }*/
-                   
+           ((NumberAxis.TickMark<Number>) tm).setStyle("-fx-stroke-width: " + aThickness + "px;");
+        }    */           
         yaxis.setStyle("-fx-stroke-width: " + aThickness + "px;");
         chart.getData().get(0).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
         chart.getData().get(1).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
