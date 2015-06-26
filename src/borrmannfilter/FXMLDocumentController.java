@@ -148,7 +148,8 @@ public class FXMLDocumentController implements Initializable {
     private BooleanProperty isAngle;
     private BooleanProperty isSPol;
     //Chart parameters
-    private double lineThickness = 2, fontSize = 10, axisThickness = 2;
+    private double lineThickness = 2, axisThickness = 2;
+    private int fontSize = 10;
     //ConextMenu
     ContextMenu chartContextMenu;
     MenuItem printContextMenuItem, saveImageContextMenuItem, propertiesContextMenuItem;
@@ -240,6 +241,7 @@ public class FXMLDocumentController implements Initializable {
          */
         String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
         createLineChart(rSeries, tSeries, label, offset, step, mainChart);
+        updateLineChart(fontSize, lineThickness, axisThickness, mainChart);
     }
 
     @Override
@@ -533,26 +535,22 @@ public class FXMLDocumentController implements Initializable {
         chart.getData().add(tSeries);
         chart.getData().get(1).setName("Transmittivity");
         chart.setCreateSymbols(false);
-        
 
         //Formatting X-axis
         NumberAxis xaxis = (NumberAxis) chart.getXAxis();
-        Font font = new Font(fontSize);
         xaxis.setAutoRanging(false);
         xaxis.setForceZeroInRange(false);
         xaxis.setTickUnit(step * (xsize - 1) / 8);
         xaxis.setLabel(XLabel);
         xaxis.setUpperBound(offset + xsize * step / 2);
         xaxis.setLowerBound(offset - (xsize - 1) * step / 2);
-        xaxis.setTickLabelFont(font);
-        
+
         //Formatting Y-axis
         NumberAxis yaxis = (NumberAxis) chart.getYAxis();
         yaxis.setTickUnit(0.2);
         yaxis.setAutoRanging(false);
         yaxis.setUpperBound(1);
         yaxis.setLabel("(Transmi/Reflec)tivity");
-        yaxis.setTickLabelFont(font);
     }
 
     private void initSwingComponents() {
@@ -698,15 +696,33 @@ public class FXMLDocumentController implements Initializable {
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        final FXMLChartPropertiesController controller = 
-                (FXMLChartPropertiesController)loader.getController();
+        final FXMLChartPropertiesController controller
+                = (FXMLChartPropertiesController) loader.getController();
+        stage.setOnShown(ev -> {
+            controller.fontSizeField.setText(new Integer(fontSize).toString());
+            controller.lineThicknessField.setText(new Double(lineThickness).toString());
+            controller.axisThicknessField.setText(new Double(axisThickness).toString());
+        });
         stage.setOnHiding(ev -> {
             if (controller.isChanged) {
                 lineThickness = controller.lineThickness;
                 fontSize = controller.fontSize;
                 axisThickness = controller.axisThickness;
+                updateLineChart(fontSize, lineThickness, axisThickness, mainChart);
             }
         });
         stage.show();
+    }
+    /*
+     * Updating line chart after the change in chart properties
+     */
+
+    private void updateLineChart(int fSize, double lThickness, double aThickness, LineChart<?, ?> chart) {
+        NumberAxis xaxis = (NumberAxis) chart.getXAxis();
+        NumberAxis yaxis = (NumberAxis) chart.getYAxis();
+        Font font = new Font(fSize);
+        xaxis.setTickLabelFont(font);
+        yaxis.setTickLabelFont(font);
+        chart.getScene().getRoot().setStyle(".chart-series-line {-fx-stroke-width: " + 4 + "px;}");
     }
 }

@@ -50,7 +50,7 @@
             </MenuBar>
             <GridPane hgap="10" layoutX="20.0" layoutY="20.0" prefHeight="220.0" styleClass="gPane" vgap="10" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
                <children>
-                    <Label styleClass="BoxText" text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
+                    <Label styleClass="boxtext" text="Crystall parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />         
                     <GridPane styleClass="vpane" hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <children>
                             <Label text="f1: " GridPane.columnIndex="0" GridPane.rowIndex="0"  GridPane.halignment="RIGHT" />
@@ -105,7 +105,7 @@
                         <RowConstraints />
                      </rowConstraints>
                     </GridPane>
-                    <Label styleClass="BoxText" text="Graph parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />         
+                    <Label styleClass="boxtext" text="Graph parameters" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />         
                     <VBox styleClass="vpane" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.rowSpan="2">
                         <Label text="X-axis scale" textAlignment="CENTER" />
                         <Slider majorTickUnit="1" max="3" min="0" showTickLabels="true" showTickMarks="true" value="1" fx:id="xScaleSlider" />
@@ -121,7 +121,7 @@
                         </items>                         
                         </ChoiceBox>
                     </HBox>
-                    <Label styleClass="BoxText" text="Actions" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                    <Label styleClass="boxtext" text="Actions" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                     <HBox styleClass="actions" alignment="BOTTOM_CENTER" spacing="150" GridPane.columnIndex="1" GridPane.rowIndex="6">
                         <children>
                             <Button fx:id="button" alignment="CENTER_RIGHT" onAction="#handleButtonAction" text="Calculate" />
@@ -147,7 +147,7 @@
             </GridPane>
             <BorderPane fx:id="chartPane" prefHeight="350.0" styleClass="rPane" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="430.0">
                <top>
-                  <Label fx:id="output" minWidth="100.0" styleClass="BoxText" text="Graph description:" BorderPane.alignment="CENTER" />
+                  <Label fx:id="output" minWidth="100.0" styleClass="boxtext" text="Graph description:" BorderPane.alignment="CENTER" />
                </top>
                <center>
                   <LineChart fx:id="mainChart" BorderPane.alignment="CENTER">

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Samsung
+ * Copyright (C) 2015 Ruslan Feshchenko
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package borrmannfilter;
 import static TextUtilities.MyTextUtilities.*;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Map;
+import java.util.HashMap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -26,20 +28,23 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 
 /**
- * FXML Controller class
- *
- * @author Samsung
+ * FXML controller class for the chart properties box
+ * @author Ruslan Feshchenko
+ * @version 0.5
  */
 public class FXMLChartPropertiesController implements Initializable {
+
     @FXML
-    private TextField lineThicknessField;
+    public TextField lineThicknessField;
     @FXML
-    private TextField fontSizeField;
+    public TextField fontSizeField;
     @FXML
-    private TextField axisThicknessField;
+    public TextField axisThicknessField;
     //Properties
-    public double lineThickness, fontSize, axisThickness;
-    
+    public double lineThickness, axisThickness;
+    public int fontSize;
+    private Map<TextField, String> formMemory;
+
     public boolean isChanged = false;
     @FXML
     private Button okButtonBox;
@@ -48,16 +53,18 @@ public class FXMLChartPropertiesController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        lineThicknessField.textProperty().addListener(event -> lineThickness = TestValue(0.1, 10, lineThicknessField, "2"));
-        fontSizeField.textProperty().addListener(event -> fontSize = TestValue(1, 40, fontSizeField, "2"));
-        axisThicknessField.textProperty().addListener(event -> axisThickness = TestValue(0.1, 10, axisThicknessField, "2"));
-    }    
+        formMemory = new HashMap<>();
+        lineThicknessField.textProperty().addListener(event -> lineThickness = TestValueWithMemory(0.1, 10, lineThicknessField, "2", formMemory));
+        fontSizeField.textProperty().addListener(event -> fontSize = (int) Math.round(TestValueWithMemory(1, 40, fontSizeField, "2", formMemory)));
+        axisThicknessField.textProperty().addListener(event -> axisThickness = TestValueWithMemory(0.1, 10, axisThicknessField, "2", formMemory));
+    }
 
     @FXML
     private void okButtonBoxAction(ActionEvent event) {
@@ -67,7 +74,7 @@ public class FXMLChartPropertiesController implements Initializable {
 
     @FXML
     private void cancelButtonBoxAction(ActionEvent event) {
-       cancelButtonBox.getScene().getWindow().hide();
+        cancelButtonBox.getScene().getWindow().hide();
     }
-    
+
 }

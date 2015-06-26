@@ -8,12 +8,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="155" prefWidth="260" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLChartPropertiesController">
+<AnchorPane id="AnchorPane" prefHeight="160" prefWidth="270" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="borrmannfilter.FXMLChartPropertiesController">
     <stylesheets>
         <URL value="@fxmlchartproperties.css" />
     </stylesheets>
    <children>
-       <GridPane hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+       <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="5.0" hgap="5" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
            <children>
                <Label text="Line thickness: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
                <TextField fx:id="lineThicknessField" text="2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
