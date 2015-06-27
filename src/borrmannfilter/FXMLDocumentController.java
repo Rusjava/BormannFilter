@@ -483,11 +483,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handlePrintMenuAction(ActionEvent event) {
         /*
-         * Bringing up printer setup dialog and intitiate printing of the graph
+         * Bringing up printer setup dialog and intitiate printing of the chart
          */
         PrinterJob job = PrinterJob.createPrinterJob();
         job.getJobSettings().setPageLayout(layout);
-
         if (job.showPrintDialog(null)) {
             //Creating new chart for printing
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
@@ -497,8 +496,7 @@ public class FXMLDocumentController implements Initializable {
             updateLineChart(fontSize, lineThickness, axisThickness, chart);
             //Setting chart dimensions
             double pWidth = layout.getPrintableWidth();
-            chart.setPrefWidth(pWidth * 0.95);
-            chart.setPrefHeight(pWidth * 0.60);
+            chart.setPrefSize(pWidth * 0.95, pWidth * 0.60);
             //Printing
             if (job.printPage(chart)) {
                 job.endJob();
