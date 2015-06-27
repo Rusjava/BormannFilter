@@ -366,7 +366,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleAboutMenuAction(ActionEvent event) {
         javax.swing.SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(dialog,
-                "<html>Crystal diffraction calculations. <br>Version: 0.3 <br>Date: June 2015. <br>Author: Ruslan Feshchenko</html>",
+                "<html>Crystal diffraction calculations. <br>Version: 0.7 <br>Date: June 2015. <br>Author: Ruslan Feshchenko</html>",
                 "About Borrmann filter application", 1));
     }
 
