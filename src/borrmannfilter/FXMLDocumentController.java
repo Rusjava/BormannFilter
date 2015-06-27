@@ -62,7 +62,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
-import javafx.scene.transform.Scale;
 //Java Input/Output packes and classes
 import java.io.File;
 import java.io.FileWriter;
@@ -88,11 +87,12 @@ import javax.imageio.ImageIO;
 //My packages and classes
 import static TextUtilities.MyTextUtilities.*;
 import shadowfileconverter.ShadowFiles;
+import xraycrystal.XrayCrystal;
 
 /**
  *
  * @author Ruslan Feshchenko
- * @version 0.5
+ * @version 0.7
  */
 public class FXMLDocumentController implements Initializable {
 
@@ -713,7 +713,7 @@ public class FXMLDocumentController implements Initializable {
     private void updateLineChart(int fSize, double lThickness, double aThickness, LineChart<?, ?> chart) {
         Font font = new Font(fSize);
         ((NumberAxis) chart.getXAxis()).setTickLabelFont(font);
-        ((NumberAxis) chart.getXAxis()).setTickLabelFont(font);
+        ((NumberAxis) chart.getYAxis()).setTickLabelFont(font);
         //Appying new styles to axises tick marks
         chart.lookupAll(".axis-tick-mark").stream().forEach(nd -> nd.setStyle("-fx-stroke-width: " + aThickness / 2  + "px;"));
         //Applying new styles to axis   

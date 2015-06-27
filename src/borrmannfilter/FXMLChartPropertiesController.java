@@ -30,7 +30,7 @@ import javafx.scene.control.Button;
 /**
  * FXML controller class for the chart properties box
  * @author Ruslan Feshchenko
- * @version 0.5
+ * @version 0.7
  */
 public class FXMLChartPropertiesController implements Initializable {
 

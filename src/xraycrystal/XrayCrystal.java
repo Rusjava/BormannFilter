@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Samsung
+ * Copyright (C) 2015 Ruslan Feshchenko
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package borrmannfilter;
+package xraycrystal;
 
 import org.apache.commons.math3.complex.*;
 
 /**
  *
  * @author Ruslan Feshchenko
- * @version 0.5
+ * @version 0.7
  */
 public class XrayCrystal {
 

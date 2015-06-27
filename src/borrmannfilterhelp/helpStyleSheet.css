@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* 
     Created on : Jun 19, 2015, 8:10:47 PM
     Author     : Ruslan Feshchneko
-    Version    : 0.5
+    Version    : 0.7
 */
 
 .boxborder {
@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .intro { 
     padding: 5px;
-    background-color: buttonface;
+    background-color: lightcyan;
 
 }
 .boxtitle {
@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     padding: 5px;
     margin: 10px;
     margin-left: 0px;
+    margin-bottom: 40px;
 }
 
 .contents > ul > li{
@@ -63,6 +64,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     border-top-color: buttonshadow;
     padding-top: 10px;
     margin-top: 40px;
+}
+
+.footer p {
+    text-align: center;
+    border-style: solid;
+    padding: 5px;
+    border-radius: 5px;
+    border-color: gray;
+    border-width: 1px;
 }
 
 .item:target {
