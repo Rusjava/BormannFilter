@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 //JavaFX packages and classes
 import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
+import javafx.scene.layout.BorderPane;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,7 +35,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import static javafx.scene.chart.NumberAxis.TickMark;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Slider;
@@ -46,7 +45,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
 import static javafx.stage.FileChooser.ExtensionFilter;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.web.*;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
@@ -64,6 +62,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import javafx.scene.transform.Scale;
 //Java Input/Output packes and classes
 import java.io.File;
 import java.io.FileWriter;
@@ -150,7 +149,7 @@ public class FXMLDocumentController implements Initializable {
     private BooleanProperty isAngle;
     private BooleanProperty isSPol;
     //Chart parameters
-    private double lineThickness = 1, axisThickness = 2;
+    private double lineThickness = 1, axisThickness = 4;
     private int fontSize = 10;
     //ConextMenu
     ContextMenu chartContextMenu;
@@ -490,25 +489,20 @@ public class FXMLDocumentController implements Initializable {
         job.getJobSettings().setPageLayout(layout);
 
         if (job.showPrintDialog(null)) {
+            //Creating new chart for printing
             String label = isAngle.get() ? "Energy, eV" : "Angle, degree";
             LineChart<Number, Number> chart = new LineChart<>(new NumberAxis(), new NumberAxis());
-            chart.setMinWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
-            createLineChart(rSeries, tSeries, label, offset, step, chart);
-            /*
-             double scaleX = layout.getPrintableWidth() / chart.getBoundsInParent().getWidth();
-             double scaleY = layout.getPrintableHeight() / chart.getBoundsInParent().getHeight();
-             chart.getTransforms().add(new Scale(scaleX, scaleY));
-             */
-            chart.setMaxWidth(job.getJobSettings().getPageLayout().getPrintableWidth());
-            chart.setMaxHeight(job.getJobSettings().getPageLayout().getPrintableHeight());
             chart.setAnimated(false);
-            chart.layout();
+            createLineChart(rSeries, tSeries, label, offset, step, chart);
+            updateLineChart(fontSize, lineThickness, axisThickness, chart);
+            //Setting chart dimensions
+            double pWidth = layout.getPrintableWidth();
+            chart.setPrefWidth(pWidth * 0.95);
+            chart.setPrefHeight(pWidth * 0.60);
+            //Printing
             if (job.printPage(chart)) {
                 job.endJob();
             }
-            /*Stage stage = new Stage();
-             stage.setScene(new Scene(new FlowPane(new ImageView(image))));
-             stage.show();*/
         }
     }
 
@@ -550,6 +544,7 @@ public class FXMLDocumentController implements Initializable {
         yaxis.setAutoRanging(false);
         yaxis.setUpperBound(1);
         yaxis.setLabel("(Transmi/Reflec)tivity");
+        chart.setVerticalZeroLineVisible(true);
     }
 
     private void initSwingComponents() {
@@ -658,6 +653,7 @@ public class FXMLDocumentController implements Initializable {
     private void handleImageParametersMenuAction(ActionEvent event) {/*
          * Image paramters: image size
          */
+
         try {
             invokeAndWait(() -> {
                 Object[] message = {
@@ -715,18 +711,18 @@ public class FXMLDocumentController implements Initializable {
      */
 
     private void updateLineChart(int fSize, double lThickness, double aThickness, LineChart<?, ?> chart) {
-        NumberAxis xaxis = (NumberAxis) chart.getXAxis();
-        NumberAxis yaxis = (NumberAxis) chart.getYAxis();
         Font font = new Font(fSize);
-        xaxis.setTickLabelFont(font);
-        yaxis.setTickLabelFont(font);
-        ObservableList<TickMark<Number>> list = xaxis.getTickMarks();
-        /*
-        for (TickMark<?> tm: list) {
-           ((NumberAxis.TickMark<Number>) tm).setStyle("-fx-stroke-width: " + aThickness + "px;");
-        }    */           
-        yaxis.setStyle("-fx-stroke-width: " + aThickness + "px;");
+        ((NumberAxis) chart.getXAxis()).setTickLabelFont(font);
+        ((NumberAxis) chart.getXAxis()).setTickLabelFont(font);
+        //Appying new styles to axises tick marks
+        chart.lookupAll(".axis-tick-mark").stream().forEach(nd -> nd.setStyle("-fx-stroke-width: " + aThickness / 2  + "px;"));
+        //Applying new styles to axis   
+        chart.lookupAll(".chart-horizontal-zero-line").stream().forEach(nd -> nd.setStyle("-fx-stroke-width: " + aThickness + "px;"));
+        chart.lookupAll(".chart-vertical-zero-line").stream().forEach(nd -> nd.setStyle("-fx-stroke-width: " + aThickness + "px;"));
+        //Applying new styles to chart lines
         chart.getData().get(0).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
         chart.getData().get(1).getNode().setStyle("-fx-stroke-width: " + lThickness + "px;");
+        chart.layout();
+        chart.applyCss();
     }
 }
